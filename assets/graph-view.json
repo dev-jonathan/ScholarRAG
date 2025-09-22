@@ -1,0 +1,33 @@
+{
+  "nodes": [
+    {
+      "id": "d0f5afd7-46f2-43d1-bf44-b3f09f9da36d",
+      "properties": {
+        "page_content": "# [Lecture 0: Week 0 - Scratch](https://youtu.be/3LPJfIKxwWc)\n\nTABLE OF CONTENTS:\n\n0:00 - Introduction\n1:30 - AI Instructor\n2:15 - This is CS50\n12:29 - Computer Science\n13:56 - Binary\n28:03 - ASCII\n37:36 - Unicode\n46:43 - Color\n48:11 - Representation\n51:36 - Algorithms\n1:00:11 - Pseudocode\n1:05:16 - Thank you\n1:06:16...",
+        "document_metadata": {
+          "document_type": "transcription",
+          "week": "0",
+          "title": "Lecture 0: Week 0 - Scratch",
+          "original_link": "https://youtu.be/3LPJfIKxwWc",
+          "related_files": "[\"week-0-notes.md\", \"problemset/week-0-problemset.md\", \"problemset/week-0-scratch.md\"]",
+          "path": "/week-0/week-0-transcription.md"
+        },
+        "headlines": [
+          "This is CS50",
+          "[Ivy's Hardest Game](https://youtu.be/3LPJfIKxwWc?t=6633)",
+          "## [The Harvard Krokodiloes and The Radcliffe Pitches](https://youtu.be/3LPJfIKxwWc?t=7203)"
+        ],
+        "keyphrases": ["Scratch", "algorithms", "MIT"]
+      },
+      "type": "document"
+    },
+    {
+      "id": "779d39a4-c617-43e1-ab0d-9518590a8fdb",
+      "properties": {
+        "page_content": "Algorithms 1:00:11 - Pseudocode 1:05:16 - Thank you 1:06:16 - Artificial Intelligence 1:15:52 - cs50.dev 1:16:19 - Scratch 1:19:03 - Hello, World 1:22:06 - Hello, You 1:29:23 - Meow 1:32:10 - Abstraction 1:36:22 - Conditionals 1:43:50 - Oscartime 1:50:33 - Ivy's Hardest Game 2:00:03 - The Harvard Krokodiloes and The Radcliffe Pitches ...",
+        "keyphrases": ["programming", "CS50", "JavaScript", "data science"]
+      },
+      "type": "chunk"
+    }
+  ]
+}
