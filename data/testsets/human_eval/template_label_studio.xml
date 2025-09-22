@@ -1,0 +1,199 @@
+
+<View>
+  <Style>
+    .root {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #121212; /* dark bg */
+      color: #e0e0e0; /* light text */
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+      gap: 20px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .block {
+      flex: 1;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 6px;
+      overflow-y: auto;
+      max-height: calc(100vh - 160px);
+    }
+
+    .prompt-block {
+      background-color: #00695C; /* Darker teal for better contrast */
+      border: 1px solid #444444; /* darker border */
+      color: white; /* White text for contrast */
+    }
+
+    .answer-block {
+      background-color: #C63F17; /* Richer dark orange for better readability */
+      border: 1px solid #444444;
+      color: white; /* White text for contrast */
+    }
+
+    .context-block {
+      background-color: #E0E0E0; /* Softer off-white */
+      border: 1px solid #444444;
+      color: #212121; /* Dark gray text for contrast */
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #e0e0e0;
+    }
+
+    /* Criteria container and blocks */
+    .criteria-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 20px;
+      border: 1px solid #666666;
+      border-radius: 6px;
+      background-color: #2a2a2a;
+      margin-top: 20px;
+    }
+
+    /* NEW: Row for criteria blocks as columns */
+    .criteria-blocks-row {
+      display: flex;
+      flex-direction: row;
+      gap: 18px;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .criteria-block-faithfulness,
+    .criteria-block-relevancy,
+    .criteria-block-quality {
+      flex: 1 1 0;
+      min-width: 250px;
+      max-width: 33%;
+      border-radius: 6px;
+      padding: 20px;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    .criteria-block-faithfulness {
+      background: #3a4a3e;
+      border: 1px solid #4c5d47;
+      color: #cde3bc;
+    }
+    .criteria-block-relevancy {
+      background: #30475e;
+      border: 1px solid #435b7a;
+      color: #cbd9e7;
+    }
+    .criteria-block-quality {
+      background: #60493b;
+      border: 1px solid #7a5e51;
+      color: #e0c9b4;
+    }
+
+    .criteria-container .lsf-header {
+      color: #e0e0e0;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+    .criteria-block-faithfulness Text,
+    .criteria-block-relevancy Text,
+    .criteria-block-quality Text {
+      color: #dddddd;
+      margin-top: 4px;
+      margin-bottom: 15px;
+      font-weight: normal;
+    }
+    @media (max-width: 900px) {
+      .criteria-blocks-row {
+        flex-direction: column;
+      }
+      .criteria-block-faithfulness,
+      .criteria-block-relevancy,
+      .criteria-block-quality {
+        max-width: 100%;
+        min-width: 0;
+      }
+    }
+  </Style>
+
+  <View className="root">
+    <View className="container">
+
+      <View style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+        <View className="block prompt-block">
+          <Header value="Question (User Input)"/>
+          <Text name="question" value="$user_input"/>
+        </View>
+
+        <View className="block answer-block">
+          <Header value="Answer (Reference)"/>
+          <HyperText name="answer" value="$response_html"/>
+        </View>
+
+      </View>
+
+      <View style="flex: 1; display: flex; flex-direction: column; gap: 20px;">
+        <View className="block context-block">
+          <Header value="Context / Reference"/>
+          <HyperText name="reference_contexts" value="$retrieved_contexts_html"/>
+        </View>
+      </View>
+
+    </View>
+    <View className="criteria-container">
+      <Header value="Evaluation Criteria Guide" />
+      <View className="criteria-blocks-row">
+        <View className="criteria-block-faithfulness">
+          <Header value="Faithfulness (Contextual Fidelity)" />
+          <Text name="crit1_label" value="Is the answer faithful to the given context?"/>
+          <Choices name="faithfulness" toName="answer" choice="single" required="true">
+            <Choice value="1 - Not faithful at all " />
+            <Choice value="2 - Slightly faithful " />
+            <Choice value="3 - Partially faithful " />
+            <Choice value="4 - Mostly faithful " />
+            <Choice value="5 - Completely faithful " />
+          </Choices>
+        </View>
+        <View className="criteria-block-relevancy">
+          <Header value="Response Relevancy" />
+          <Text name="crit1_label2" value="Is the answer relevant and appropriately responsive to the question?" />
+          <Choices name="response_relevancy" toName="answer" choice="single" required="true">
+            <Choice value="1 - Completely irrelevant" />
+            <Choice value="2 - Slightly relevant" />
+            <Choice value="3 - Partially relevant" />
+            <Choice value="4 - Mostly relevant" />
+            <Choice value="5 - Completely relevant" />
+          </Choices>
+        </View>
+        <View className="criteria-block-quality">
+          <Header value="Simple Criteria Score (Question Quality)" />
+          <Text name="crit1_label3" value="Is the question clear, relevant, and well-grounded in the given context?" />
+          <Choices name="simple_criteria_score" toName="question" choice="single" required="true">
+            <Choice value="1 - Very poor (incoherent or out of context)" />
+            <Choice value="2 - Poor (unclear or hardly relevant)" />
+            <Choice value="3 - Fair (acceptable but can improve)" />
+            <Choice value="4 - Good (clear and relevant, minor improvements possible)" />
+            <Choice value="5 - Excellent (clear, relevant, and perfectly grounded in context)" />
+          </Choices>
+        </View>
+      </View>
+    </View>
+    <View style="margin-top: 20px; padding: 0 20px 20px;">
+      <Header value="Comments (optional)"/>
+      <Textarea name="comments" toName="answer" placeholder="Add any comments or observations here..." rows="3"/>
+    </View>
+  </View>
+</View>
