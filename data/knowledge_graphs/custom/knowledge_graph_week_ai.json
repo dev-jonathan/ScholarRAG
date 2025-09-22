@@ -1,0 +1,106 @@
+{
+  "nodes": [
+    {
+      "id": "4e316db7-c7da-4aea-9a8f-cf8b921b0bf3",
+      "properties": {
+        "page_content": "# [Artificial Intelligence](https://cs50.harvard.edu/x/2024/notes/ai/#artificial-intelligence)\n\n- [Welcome!](#welcome)\n- [Image Generation](#image-generation)\n- [ChatGPT](#chatgpt)\n- [Prompt Generation](#prompt-generation)\n- [CS50.ai](#cs50ai)\n- [Generative AI](#generative-ai)\n- [Decision Trees](#decision-trees)\n- [Minimax](#minimax)\n- [Machine Learning](#machine-learning)\n- [Deep Learning](#deep-learning)\n- [Generative Artificial Intelligence](#generative-artificial-intelligence)\n- [Summing Up](#summing-up)\n\n## [Welcome!](https://cs50.harvard.edu/x/2024/notes/ai/#welcome)\n\n- In computer science and programming circles, _rubber ducking_ or _rubber duck debugging_ is the act of speaking to an inanimate object to be able to _talk through_ a challenging problem.\n- Most recently, CS50 created our own rubber duck debugger at [cs50.ai](https://cs50.ai), which uses artificial intelligence as a way by which to interact with students to help them with their own challenging problems.\n- Students engaging with this tool can begin understanding the potential of what AI can offer the world.\n\n## [Image Generation](https://cs50.harvard.edu/x/2024/notes/ai/#image-generation)\n\n- Numerous AI tools have created the potential for artificially generated images to enter the world.\n- Up until recently, most of these tools had numerous tells that might indicate to an observer that an image is AI-generated.\n- However, tools are becoming exceedingly good at generating these images.\n- Indeed, as technology improves, it will soon be almost, if not entirely, impossible for such images to be detected with the naked eye.\n- Software has also gained the ability to mutate individual images within video.\n\n## [ChatGPT](https://cs50.harvard.edu/x/2024/notes/ai/#chatgpt)\n\n- A very well-known bleeding-edge tool is the text generation tool _chatGPT_.\n- In CS50, we do not allow the use of ChatGPT. However, we do allow the use of our own rubber duck debugger at [cs50.ai](https://cs50.ai).\n- In CS50, we leverage the tools of Azure and OpenAI, along with our own vector database that holds very recent information from our most recent lectures and offerings, to provide our rubber duck debugger toll.\n\n## [Prompt Generation](https://cs50.harvard.edu/x/2024/notes/ai/#prompt-generation)\n\n- _Prompt generation_ is the way by which an individual can communicate with an AI platform.\n- We use a _system prompt_ to teach the AI how to interact with users. We teach the AI how to work with students.\n- _User prompts_ are those provided by users to interact with the AI. With these prompts, students interact with the AI.\n\n## [CS50.ai](https://cs50.harvard.edu/x/2024/notes/ai/#cs50ai)\n\n- Our [rubber duck debugger](https://cs50.ai) can provide conceptual help with computer science concepts.\n- Further, the [rubber duck debugger](https://cs50.ai) can help students write more efficient code.\n- Additionally, the [rubber duck debugger](https://cs50.ai) can help when a student is stuck in one of their assignments. For example, students may encounter errors that prevent them from progressing in their assignments. When students hit a wall, they don’t have to wait for support staff to be available.\n- The [rubber duck debugger](https://cs50.ai) does stipulate, however, that it is an AI and that it is experimental. Students should be conscious of the degree to which they blindly trust the AI. Consider the following image:\n\n  ![rubber duck giving an answer with a disclaimer](https://cs50.harvard.edu/x/2024/notes/ai/cs50AiLectureSlide060.png)\n\n- AI has an inhuman level of patience.\n\n## [Generative AI](https://cs50.harvard.edu/x/2024/notes/ai/#generative-ai)\n\n- AI has been with us for much time! Software has long adapted to users. Algorithms look for patterns in junk mail, images saved on your phone, and to play games.\n- In games, for example, step-by-step instructions may allow a computerized adversary play a game of Breakout.\n\n## [Decision Trees](https://cs50.harvard.edu/x/2024/notes/ai/#decision-trees)\n\n- _Decision trees_ are used by an algorithm to decide what decision to make.\n- For example, in Breakout, an algorithm may consider what choice to make based on the instructions in the code:\n\n  ```\n  While game is ongoing:\n  If ball is left of paddle:\n    Move paddle left\n  Else if ball is right of padding:\n    Move paddle right\n  Else:\n    Don't move paddle\n  ```\n\n- With most games, they attempt to minimize the number of calculations required to compete with the player.\n\n## [Minimax](https://cs50.harvard.edu/x/2024/notes/ai/#minimax)\n\n- You can imagine where an algorithm may score outcomes as positive, negative, and neutral.\n- In tic-tac-toe, the AI may consider a board where the computer wins as `1` and one where the computer loses as `-1`.\n- You can imagine how a computer may look at a decision tree of potential outcomes and assign scores to each potential move.\n- The computer will attempt to win by maximizing its own score.\n- In the context of tic-tac-toe, the algorithm may conceptualize this as follows:\n\n  ```\n  If player is X:\n  For each possible move:\n    Calculate score for board\n  Choose move with highest score\n\n  Else if player is O:\n    For each possible move:\n      Calculate score for board\n    Choose move with lowest score\n  ```\n\n- This could be pictured as follows:\n\n  ![tictactoe with outcomes as 1 or -1 or 0](https://cs50.harvard.edu/x/2024/notes/ai/cs50AiLectureSlide132.png)\n\n- Because computers are so powerful, they can crunch massive potential outcomes. However, the computers in our pockets or on our desks may not be able to calculate trillions of options. This is where machine learning can help.\n\n## [Machine Learning](https://cs50.harvard.edu/x/2024/notes/ai/#machine-learning)\n\n- Machine learning is a way by which a computer can learn through reinforcement.\n- A computer can learn how to flip a pancake.\n- A computer can learn how to play Mario.\n- A computer can learn how to play The Floor is Lava.\n- The computer repeats trial after trial after trial to discover what behaviors to repeat and those not to repeat.\n- Within much of AI-based algorithms, there are concepts of _explore vs. exploit_, where the AI may randomly try something that may not be considered optimal. Randomness can yield better outcomes.\n\n## [Deep Learning](https://cs50.harvard.edu/x/2024/notes/ai/#deep-learning)\n\n- _Deep learning_ uses neural networks whereby problems and solutions are explored.\n- For example, deep learning may attempt to predict whether a blue or red dot will appear somewhere on a graph. Consider the following image:\n\n  ![blue dots and red dots separated by a line](https://cs50.harvard.edu/x/2024/notes/ai/cs50AiLectureSlide208.png)\n\n- Existing training data is used to predict an outcome. Further, more training data may be created by the AI to discover further patterns.\n- Deep learning creates nodes (pictured below), which associate inputs and outputs.\n\n  ![Nodes connected to notes](https://cs50.harvard.edu/x/2024/notes/ai/cs50AiLectureSlide210.png)\n\n## [Generative Artificial Intelligence](https://cs50.harvard.edu/x/2024/notes/ai/#generative-artificial-intelligence)\n\n- _Large language models_ are massive models that make predictions based on huge amounts of training.\n- Just a few years ago, AI was not very good at completing and generating sentences.\n- The AI encodes words into _embeddings_ to find relationships between words. Thus, through a huge amount of training, a massive neural network can predict the association between words - resulting in the ability for generative AI to generate content and even have conversations with users.\n- These technologies are what is behind our [rubber duck debugger](https://cs50.ai).\n\n## [Summing Up](https://cs50.harvard.edu/x/2024/notes/ai/#summing-up)\n\nIn this lesson, you learned about some of the technology behind our own [rubber duck debugger](https://cs50.ai). Specifically, we discussed…\n\n- Image Generation\n- ChatGPT\n- Prompt Generation\n- CS50.ai\n- Generative AI\n- Decision Trees\n- Minimax\n- Machine Learning\n- Deep Learning\n- Generative Artificial Intelligence\n\nThis was CS50!",
+        "document_metadata": {
+          "document_type": "notes",
+          "week": "ai",
+          "title": "Artificial Intelligence",
+          "original_link": "https://cs50.harvard.edu/x/2024/notes/ai/#artificial-intelligence",
+          "related_files": "[\"week-ai-transcription.md\"]",
+          "path": "/week-ai/week-ai-notes.md"
+        },
+        "headlines": [
+          "Welcome!",
+          "Image Generation",
+          "ChatGPT",
+          "Prompt Generation",
+          "CS50.ai",
+          "Generative AI",
+          "Decision Trees",
+          "Minimax",
+          "Machine Learning",
+          "Deep Learning"
+        ],
+        "keyphrases": [
+          "Artificial Intelligence",
+          "rubber duck debugger",
+          "Image Generation",
+          "ChatGPT",
+          "Prompt Generation",
+          "CS50.ai",
+          "Generative AI",
+          "Decision Trees",
+          "Minimax",
+          "Machine Learning"
+        ]
+      },
+      "type": "document"
+    },
+    {
+      "id": "f5da348d-350a-4923-bfce-e0dba7af6b79",
+      "properties": {
+        "page_content": "# [Artificial Intelligence](https://cs50.harvard.edu/x/2024/notes/ai/#artificial-intelligence) - [ Welcome!](#welcome) - [ Image Generation](#image-generation) - [ ChatGPT](#chatgpt) - [ Prompt Generation](#prompt-generation) - [ CS50.ai](#cs50ai) - [ Generative AI](#generative-ai) - [ Decision Trees](#decision-trees) - [ Minimax](#minimax) - [ Machine Learning](#machine-learning) - [",
+        "keyphrases": [
+          "Artificial Intelligence",
+          "Image Generation",
+          "ChatGPT",
+          "Prompt Generation",
+          "CS50.ai",
+          "Generative AI",
+          "Decision Trees",
+          "Minimax",
+          "Machine Learning"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "022f7d20-a6e9-4bc0-bfb5-ec888deeaaec",
+      "properties": {
+        "page_content": "Deep Learning](#deep-learning) - [Generative Artificial Intelligence](#generative-artificial-intelligence) - [Summing Up](#summing-up) ## [Welcome!](https://cs50.harvard.edu/x/2024/notes/ai/#welcome) - In computer science and programming circles, _rubber ducking_ or _rubber duck debugging_ is the act of speaking to an inanimate object to be able to _talk through_ a challenging problem. - Most recently, CS50 created our own rubber duck debugger at [cs50.ai](https://cs50.ai), which uses artificial intelligence as a way by which to interact with students to help them with their own challenging problems. - Students engaging with this tool can begin understanding the potential of what AI can offer the world. ## [Image Generation](https://cs50.harvard.edu/x/2024/notes/ai/#image-generation) - Numerous AI tools have created the potential for artificially generated images to enter the world. - Up until recently, most of these tools had numerous tells that might indicate to an observer that an image is AI-generated. - However, tools are becoming exceedingly good at generating these images. - Indeed, as technology improves, it will soon be almost, if not entirely, impossible for such images to be detected with the naked eye. - Software has also gained the ability to mutate individual images within video. ## [ChatGPT](https://cs50.harvard.edu/x/2024/notes/ai/#chatgpt) - A very well-known bleeding-edge tool is the text generation tool _chatGPT_. - In CS50, we do not allow the use of ChatGPT. However, we do allow the use of our own rubber duck debugger at [cs50.ai](https://cs50.ai). - In CS50, we leverage the tools of Azure and OpenAI, along with our own vector database that holds very recent information from our most recent lectures and offerings, to provide our rubber duck debugger toll. ## [Prompt Generation](https://cs50.harvard.edu/x/2024/notes/ai/#prompt-generation) - _Prompt generation_ is the way by which an individual can communicate with an AI platform. - We use a _system prompt_ to teach the AI how to interact with users. We teach the AI how to work with students. - _User prompts_ are those provided by users to interact with the AI. With these prompts, students interact with the AI. ## [CS50.ai](https://cs50.harvard.edu/x/2024/notes/ai/#cs50ai) - Our [rubber duck debugger](https://cs50.ai) can provide conceptual help with computer science concepts. - Further, the [rubber duck debugger](https://cs50.ai) can help students write more efficient code. - Additionally, the [rubber duck debugger](https://cs50.ai) can help when a student is stuck in one of their assignments. For example, students may encounter errors that prevent them from progressing in their assignments. When students hit a wall, they don’t have to wait for support staff to be available. - The [rubber duck debugger](https://cs50.ai) does stipulate, however, that it is an AI and that it is experimental. Students should be conscious of the degree to which they blindly trust the AI. Consider the following image: ![rubber duck giving an answer with a disclaimer](https://cs50.harvard.edu/x/2024/notes/ai/cs50AiLectureSlide060.png) - AI has an inhuman level of patience. ## [Generative AI](https://cs50.harvard.edu/x/2024/notes/ai/#generative-ai) - AI has been with us for much time! Software has long adapted to users. Algorithms look for patterns in junk mail, images saved on your phone, and to play games. - In games, for example, step-by-step instructions may allow a computerized adversary play a game of Breakout. ## [Decision Trees](https://cs50.harvard.edu/x/2024/notes/ai/#decision-trees) - _Decision trees_ are used by an algorithm to decide what decision to make. - For example, in Breakout, an algorithm may consider what choice to make based on the instructions in the code: ``` While game is ongoing: If ball is left of paddle: Move paddle left Else if ball is right of padding: Move paddle right Else: Don't move paddle ``` - With most games, they attempt to minimize the number of calculations required to compete with the player. ## [Minimax](https://cs50.harvard.edu/x/2024/notes/ai/#minimax) - You can imagine where an algorithm may score outcomes as positive, negative, and neutral. - In tic-tac-toe, the AI may consider a board where the computer wins as `1` and one where the computer loses as `-1`. - You can imagine how a computer may look at a decision tree of potential outcomes and assign scores to each potential move. - The computer will attempt to win by maximizing its own score. - In the context of tic-tac-toe, the algorithm may conceptualize this as follows: ``` If player is X: For each possible move: Calculate score for board Choose move with highest score Else if player is O: For each possible move: Calculate score for board Choose move with lowest score ``` - This could be pictured as follows: ![tictactoe with outcomes as 1 or -1 or 0](https://cs50.harvard.edu/x/2024/notes/ai/cs50AiLectureSlide132.png) - Because computers are so powerful, they can crunch massive potential outcomes. However, the computers in our pockets or on our desks may not be able to calculate trillions of options. This is where machine learning can help. ## [Machine Learning](https://cs50.harvard.edu/x/2024/notes/ai/#machine-learning) - Machine learning is a way by which a computer can learn through reinforcement. - A computer can learn how to flip a pancake. - A computer can learn how to play Mario. - A computer can learn how to play The Floor is Lava. - The computer repeats trial after trial after trial to discover what behaviors to repeat and those not to repeat. - Within much of AI-based algorithms, there are concepts of _explore vs. exploit_, where the AI may randomly try something that may not be considered optimal. Randomness can yield better outcomes. ## [Deep Learning](https://cs50.harvard.edu/x/2024/notes/ai/#deep-learning) - _Deep learning_ uses neural networks whereby problems and solutions are explored. - For example, deep learning may attempt to predict whether a blue or red dot will appear somewhere on a graph. Consider the following image: ![blue dots and red dots separated by a line](https://cs50.harvard.edu/x/2024/notes/ai/cs50AiLectureSlide208.png) - Existing training data is used to predict an outcome. Further, more training data may be created by the AI to discover further patterns. - Deep learning creates nodes (pictured below), which associate inputs and outputs. ![Nodes connected to notes](https://cs50.harvard.edu/x/2024/notes/ai/cs50AiLectureSlide210.png) ## [Generative Artificial Intelligence](https://cs50.harvard.edu/x/2024/notes/ai/#generative-artificial-intelligence) - _Large language models_ are massive models that make predictions based on huge amounts of training. - Just a few years ago, AI was not very good at completing and generating sentences. - The AI encodes words into _embeddings_ to find relationships between words. Thus, through a huge amount of training, a massive neural network can predict the association between words - resulting in the ability for generative AI to generate content and even have conversations with users. - These technologies are what is behind our [rubber duck debugger](https://cs50.ai). ## [Summing Up](https://cs50.harvard.edu/x/2024/notes/ai/#summing-up) In this lesson, you learned about some of the technology behind our own [rubber duck debugger](https://cs50.ai). Specifically, we discussed… - Image Generation - ChatGPT - Prompt Generation - CS50.ai - Generative AI - Decision Trees - Minimax - Machine Learning - Deep Learning - Generative Artificial Intelligence This was CS50!",
+        "keyphrases": [
+          "rubber duck debugger",
+          "artificial intelligence",
+          "Deep Learning",
+          "Generative Artificial Intelligence",
+          "Image Generation",
+          "ChatGPT",
+          "Prompt Generation",
+          "CS50.ai",
+          "Decision Trees",
+          "Machine Learning"
+        ]
+      },
+      "type": "chunk"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "eaff46b7-eec4-4cde-ad4f-2ef18c69f6b1",
+      "type": "child",
+      "source": "4e316db7-c7da-4aea-9a8f-cf8b921b0bf3",
+      "target": "f5da348d-350a-4923-bfce-e0dba7af6b79",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "972d75f6-0811-4ada-9af0-a2b3e2b4dede",
+      "type": "child",
+      "source": "4e316db7-c7da-4aea-9a8f-cf8b921b0bf3",
+      "target": "022f7d20-a6e9-4bc0-bfb5-ec888deeaaec",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "207533b1-baeb-4cfd-bccc-1ab90dd8d294",
+      "type": "next",
+      "source": "f5da348d-350a-4923-bfce-e0dba7af6b79",
+      "target": "022f7d20-a6e9-4bc0-bfb5-ec888deeaaec",
+      "bidirectional": false,
+      "properties": {}
+    }
+  ]
+}

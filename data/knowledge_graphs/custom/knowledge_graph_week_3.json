@@ -1,0 +1,741 @@
+{
+  "nodes": [
+    {
+      "id": "5faef7ea-ea15-4045-a5d3-cd1850f01c94",
+      "properties": {
+        "page_content": "# [Plurality](https://cs50.harvard.edu/x/2024/psets/3/plurality/#plurality)\n\n## [Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/plurality/#problem-to-solve)\n\nElections come in all shapes and sizes. In the UK, the [Prime Minister](https://www.parliament.uk/education/about-your-parliament/general-elections/) is officially appointed by the monarch, who generally chooses the leader of the political party that wins the most seats in the House of Commons. The United States uses a multi-step [Electoral College](https://www.archives.gov/federal-register/electoral-college/about.html) process where citizens vote on how each state should allocate Electors who then elect the President.\n\nPerhaps the simplest way to hold an election, though, is via a method commonly known as the “plurality vote” (also known as “first-past-the-post” or “winner take all”). In the plurality vote, every voter gets to vote for one candidate. At the end of the election, whichever candidate has the greatest number of votes is declared the winner of the election.\n\nFor this problem, you’ll implement a program that runs a plurality election, per the below.\n\n## [Demo](https://cs50.harvard.edu/x/2024/psets/3/plurality/#demo)\n\n```\nAlice\n$ ./plurality Alice Bob Charlie\nNumber of voters: 3\nVote: Alice\nVote: Bob\nVote: Charlie\nAlice\nBob\nCharlie\n$ ./plurality\nUsage: plurality [candidate ...]\n$\n```\n\n## [Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/plurality/#distribution-code)\n\nFor this problem, you’ll extend the functionality of “distribution code” provided to you by CS50’s staff.\n\n<details>\n<summary>Download the distribution code</summary>\n\nLog into [cs50.dev](https://cs50.dev/), click on your terminal window, and execute `cd` by itself. You should find that your terminal window’s prompt resembles the below:\n\n```\n$\n```\n\nNext execute\n\n```\nwget https://cdn.cs50.net/2023/fall/psets/3/plurality.zip\n```\n\nin order to download a ZIP called `plurality.zip` into your codespace.\n\nThen execute\n\n```\nunzip plurality.zip\n```\n\nto create a folder called `plurality`. You no longer need the ZIP file, so you can execute\n\n```\nrm plurality.zip\n```\n\nand respond with “y” followed by Enter at the prompt to remove the ZIP file you downloaded.\n\nNow type\n\n```\ncd plurality\n```\n\nfollowed by Enter to move yourself into (i.e., open) that directory. Your prompt should now resemble the below.\n\n```\nplurality/ $\n```\n\nIf all was successful, you should execute\n\n```\nls\n```\n\nand see a file named `plurality.c`. Executing `code plurality.c` should open the file where you will type your code for this problem set. If not, retrace your steps and see if you can determine where you went wrong!\n\n</details>\n<details>\n<summary>Understand the code inplurality.c</summary>\n\nWhenever you’ll extend the functionality of existing code, it’s best to be sure you first understand it in its present state.\n\nLook first at the top of the file. The line `#define MAX 9` is some syntax used here to mean that `MAX` is a constant (equal to `9`) that can be used throughout the program. Here, it represents the maximum number of candidates an election can have.\n\n```c\n// Max number of candidates\n#define MAX 9\n```\n\nNotice that `plurality.c` then uses this constant to define a global array—that is, an array that any function can access.\n\n```c\n// Array of candidates\ncandidate candidates[MAX];\n```\n\nBut what, in this case, is a `candidate`? In `plurality.c`, a `candidate` is a `struct`. Each `candidate` has two fields: a `string` called `name` representing the candidate’s name, and an `int` called `votes` representing the number of votes the candidate has.\n\n```c\n// Candidates have name and vote count\ntypedef struct\n{\n    string name;\n    int votes;\n}\ncandidate;\n```\n\nNow, take a look at the `main` function itself. See if you can find where the program sets a global variable `candidate_count` representing the number of candidates in the election.\n\n```c\n// Number of candidates\nint candidate_count;\n```\n\nWhat about where it copies command-line arguments into the array `candidates`?\n\n```c\n// Populate array of candidates\ncandidate_count = argc - 1;\nif (candidate_count > MAX)\n{\n    printf(\"Maximum number of candidates is %i\\n\", MAX);\n    return 2;\n}\nfor (int i = 0; i < candidate_count; i++)\n{\n    candidates[i].name = argv[i + 1];\n    candidates[i].votes = 0;\n}\n```\n\nAnd where it asks the user to type in the number of voters?\n\n```c\nint voter_count = get_int(\"Number of voters: \");\n```\n\nThen, the program lets every voter type in a vote, calling the `vote` function on each candidate voted for. Finally, `main` makes a call to the `print_winner` function to print out the winner (or winners) of the election. We’ll leave it to you to identify the code that implements this functionality.\n\nIf you look further down in the file, though, you’ll notice that the `vote` and `print_winner` functions have been left blank.\n\n```c\n// Update vote totals given a new vote\nbool vote(string name)\n{\n    // TODO\n    return false;\n}\n\n// Print the winner (or winners) of the election\nvoid print_winner(void)\n{\n    // TODO\n    return;\n}\n```\n\nThis part is up to you to complete! **You should not modify anything else in `plurality.c` other than the implementations of the `vote` and `print_winner` functions (and the inclusion of additional header files, if you’d like).**\n\n</details>\n\n## [Hints](https://cs50.harvard.edu/x/2024/psets/3/plurality/#hints)\n\nClick the below toggles to read some advice!\n\n<details>\n<summary>Complete thevotefunction</summary>\n\nNext, complete the `vote` function.\n\n- Consider that `vote`’s signature, `bool vote(string name)`, shows it takes a single argument, a `string` called `name`, representing the name of the candidate who was voted for.\n- `vote` should return a `bool`, where `true` indicates a vote was successfully cast and `false` indicates it was not.\n\nOne way to approach this problem is to do the following:\n\n1. Iterate over each candidate\n   1. Check if candidate’s name matches the input, `name`\n      1. If yes, increment that candidate’s votes and return `true`\n      2. If no, continue checking\n2. If no matches after checking each candidate, return `false`\n\nLet’s write some pseudocode to remind you to do just that:\n\n```c\n// Update vote totals given a new vote\nbool vote(string name)\n{\n    // Iterate over each candidate\n        // Check if candidate's name matches given name\n            // If yes, increment candidate's votes and return true\n\n    // If no match, return false\n}\n```\n\nWe’ll leave the implementation in code, though, up to you!\n\n</details>\n<details>\n<summary>Complete theprint_winnerfunction</summary>\n\nFinally, complete the `print_winner` function.\n\n- The function should print out the name of the candidate who received the most votes in the election, and then print a newline.\n- The election could end in a tie if multiple candidates each have the maximum number of votes. In that case, you should output the names of each of the winning candidates, each on a separate line.\n\nYou might think a sorting algorithm would best solve this problem: imagine sorting candidates by their vote totals and printing the top candidate (or candidates). Recall, though, that sorting can be expensive: even Merge Sort, one of the fastest sorting algorithms, runs in \\(O(N \\space log(N))\\).\n\nConsider that you need only two pieces of information to solve this problem:\n\n1. The maximum number of votes\n2. The candidate (or candidates) with that number of votes\n\nAs such, a good solution might require only two searches. Write some pseudocode to remind yourself to do just that:\n\n```c\n// Print the winner (or winners) of the election\nvoid print_winner(void)\n{\n    // Find the maximum number of votes\n\n    // Print the candidate (or candidates) with maximum votes\n\n}\n```\n\nWe’ll leave the code, though, up to you!\n\n</details>\n\n## [Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/plurality/#walkthrough)\n\n<iframe src=\"https://www.youtube.com/embed/ftOapzDjEb8?modestbranding=0&rel=0&showinfo=0\"></iframe>\n\n## [How to Test](https://cs50.harvard.edu/x/2024/psets/3/plurality/#how-to-test)\n\nBe sure to test your code to make sure it handles…\n\n- An election with any number of candidate (up to the `MAX` of `9`)\n- Voting for a candidate by name\n- Invalid votes for candidates who are not on the ballot\n- Printing the winner of the election if there is only one\n- Printing the winner of the election if there are multiple winners\n\n### [Correctness](https://cs50.harvard.edu/x/2024/psets/3/plurality/#correctness)\n\n```\ncheck50 cs50/problems/2024/x/plurality\n```\n\n### [Style](https://cs50.harvard.edu/x/2024/psets/3/plurality/#style)\n\n```\nstyle50 plurality.c\n```\n\n## [How to Submit](https://cs50.harvard.edu/x/2024/psets/3/plurality/#how-to-submit)\n\n```\nsubmit50 cs50/problems/2024/x/plurality\n```",
+        "document_metadata": {
+          "document_type": "exercise",
+          "week": "3",
+          "title": "Plurality",
+          "original_link": "https://cs50.harvard.edu/x/2024/psets/3/plurality/#plurality",
+          "related_files": "[\"week-3-notes.md\", \"week-3-transcription.md\", \"problemset/week-3-problemset.md\", \"problemset/week-3-runoff.md\", \"problemset/week-3-sort.md\", \"problemset/week-3-tideman.md\"]",
+          "path": "/week-3/problemset/week-3-plurality.md"
+        },
+        "headlines": [
+          "Problem to Solve",
+          "Demo",
+          "Distribution Code",
+          "Hints",
+          "Walkthrough",
+          "How to Test",
+          "Correctness",
+          "Style",
+          "How to Submit"
+        ],
+        "keyphrases": [
+          "plurality election",
+          "candidate",
+          "vote",
+          "print_winner function",
+          "distribution code",
+          "command-line arguments",
+          "Electoral College",
+          "House of Commons",
+          "plurality.c",
+          "maximum number of votes"
+        ]
+      },
+      "type": "document"
+    },
+    {
+      "id": "a7e1ce91-118d-4528-b661-b9a43830d800",
+      "properties": {
+        "page_content": "# [Problem Set 3](https://cs50.harvard.edu/x/2024/psets/3/#problem-set-3)\n\nCollaboration on problem sets is not permitted except to the extent that you may ask classmates and others for help so long as that help does not reduce to another doing your work for you, per the course’s policy on [academic honesty](../../syllabus/#academic-honesty).\n\nThe staff conducts random audits of submissions to CS50x. Students found to be in violation of this policy will be removed from the course. Students who have already completed CS50x, if found to be in violation, will have their CS50 Certificate permanently revoked.\n\n## [What to Do](https://cs50.harvard.edu/x/2024/psets/3/#what-to-do)\n\n1. Submit [Sort](sort/)\n2. Submit [Plurality](plurality/)\n3. Submit **one** of:\n   - [Runoff](runoff/), if feeling more or less comfortable\n   - [Tideman](tideman/), if feeling very, very, very comfortable\n\nIf you submit both Runoff and Tideman, we’ll record the higher of your two scores. Note that **Tideman is optional** but challenging!\n\n## [When to Do It](https://cs50.harvard.edu/x/2024/psets/3/#when-to-do-it)\n\nBy [2024-12-31T23:59:00-05:00](https://time.cs50.io/20241231T235900-0500).\n\n## [Advice](https://cs50.harvard.edu/x/2024/psets/3/#advice)\n\n- Try out any of David’s programs from class via [Week 3](../../weeks/3/)’s source code.\n- If you see any errors when compiling your code with `make`, focus first on fixing the very first error you see, scrolling up as needed. If unsure what it means, try asking `help50` for help. For instance, if trying to compile `plurality`, and\n\n  ```\n  make plurality\n  ```\n\n  is yielding errors, try running\n\n  ```\n  help50 make plurality\n  ```\n\n  instead!",
+        "document_metadata": {
+          "document_type": "problemset",
+          "week": "3",
+          "title": "Problem Set 3",
+          "original_link": "https://cs50.harvard.edu/x/2024/psets/3/#problem-set-3",
+          "related_files": "[\"week-3-notes.md\", \"week-3-transcription.md\", \"problemset/week-3-plurality.md\", \"problemset/week-3-runoff.md\", \"problemset/week-3-sort.md\", \"problemset/week-3-tideman.md\"]",
+          "path": "/week-3/problemset/week-3-problemset.md"
+        },
+        "headlines": [
+          "What to Do",
+          "When to Do It",
+          "Advice"
+        ],
+        "keyphrases": [
+          "problem sets",
+          "academic honesty",
+          "CS50x",
+          "CS50 Certificate",
+          "Sort",
+          "Plurality",
+          "Runoff",
+          "Tideman",
+          "David’s programs",
+          "compiling your code"
+        ]
+      },
+      "type": "document"
+    },
+    {
+      "id": "4451ed6f-c582-4416-a8d7-6d982d5f0d9d",
+      "properties": {
+        "page_content": "# [Lecture 3](https://cs50.harvard.edu/x/2024/notes/3/#lecture-3)\n\n- [Welcome!](#welcome)\n- [Linear Search](#linear-search)\n- [Binary Search](#binary-search)\n- [Running Time](#running-time)\n- [search.c](#searchc)\n- [Data Structures](#data-structures)\n- [Sorting](#sorting)\n- [Bubble Sort](#bubble-sort)\n- [Recursion](#recursion)\n- [Merge Sort](#merge-sort)\n- [Summing Up](#summing-up)\n\n## [Welcome!](https://cs50.harvard.edu/x/2024/notes/3/#welcome)\n\n- In week zero, we introduced the idea of an _algorithm_: a black box that may take an input and creates an output.\n- This week, we are going to expand upon our understanding of algorithms through pseudocode and into code itself.\n- Also, we are going to consider the efficiency of these algorithms. Indeed, we are going to be building upon our understanding of how to use some of the _lower-level_ concepts we discussed last week in building algorithms.\n- Recall back to earlier in the course when we introduced the following graph:\n\n  ![chart with: \"size of problem\" as x-axis; \"time to solve\" as y-axis; red, steep straight line from origin to top of graph close to yellow, less steep straight line from origin to top of graph both labeled \"n\"; green, curved line that gets less and less steep from origin to right of graph labeled \"log n)](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide010.png \"complexity\")\n\n- As we step into this week, you should consider how the way an algorithm works with a problem may determine the time it takes to solve a problem! Algorithms can be designed to be more and more efficient, to a limit.\n- Today, we will focus upon the design of algorithms and how to measure their efficiency.\n\n## [Linear Search](https://cs50.harvard.edu/x/2024/notes/3/#linear-search)\n\n- Recall that last week you were introduced to the idea of an _array_, blocks of memory that are consecutive: side-by-side with one another.\n- You can metaphorically imagine an array like a series of seven red lockers as follows:\n\n  ![Seven red lockers side by side](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide018.png \"lockers\")\n\n- We can imagine that we have an essential problem of wanting to know, “Is the number 50 inside an array?” A computer must look at each locker to be able to see if the number 50 is inside. We call this process of finding such a number, character, string, or other item _searching_.\n- We can potentially hand our array to an algorithm, wherein our algorithm will search through our lockers to see if the number 50 is behind one of the doors: Returning the value true or false.\n\n  ![seven red lockers pointing to an empty box. Out of the empty box comes and output of bool](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide022.png \"lockers as algorithm\")\n\n- We can imagine various instructions we might provide our algorithm to undertake this task as follows:\n\n  ```\n  For each door from left to right\n      If 50 is behind door\n          Return true\n  Return false\n  ```\n\n  Notice that the above instructions are called _pseudocode_: A human-readable version of the instructions that we could provide the computer.\n\n- A computer scientist could translate that pseudocode as follows:\n\n  ```\n  For i from 0 to n-1\n      If 50 is behind doors[i]\n          Return true\n  Return false\n  ```\n\n  Notice that the above is still not code, but it is a pretty close approximation of what the final code might look like.\n\n## [Binary Search](https://cs50.harvard.edu/x/2024/notes/3/#binary-search)\n\n- _Binary search_ is another _search algorithm_ that could be employed in our task of finding the 50.\n- Assuming that the values within the lockers have been arranged from smallest to largest, the pseudocode for binary search would appear as follows:\n\n  ```\n  If no doors left\n      Return false\n  If 50 is behind middle door\n      Return true\n  Else if 50 < middle door\n      Search left half\n  Else if 50 > middle door\n      Search right half\n  ```\n\n- Using the nomenclature of code, we can further modify our algorithm as follows:\n\n  ```\n  If no doors left\n      Return false\n  If 50 is behind doors[middle]\n      Return true\n  Else if 50 < doors[middle]\n      Search doors[0] through doors[middle - 1]\n  Else if 50 > doors[middle]\n      Search doors[middle + 1] through doors[n - 1]\n  ```\n\n  Notice, looking at this approximation of code, you can nearly imagine what this might look like in actual code.\n\n## [Running Time](https://cs50.harvard.edu/x/2024/notes/3/#running-time)\n\n- _running time_ involves an analysis using _big O_ notation. Take a look at the following graph:\n\n  ![chart with: \"size of problem\" as x-axis; \"time to solve\" as y-axis; red, steep straight line from origin to top of graph close to yellow, less steep straight line from origin to top of graph both labeled \"O(n)\"; green, curved line that gets less and less steep from origin to right of graph labeled \"O(log n)](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide042.png \"big o graphed\")\n\n- Rather than being ultra-specific about the mathematical efficiency of an algorithm, computer scientists discuss efficiency in terms of _the order of_ various running times.\n- In the above graph, the first algorithm is \\(O(n)\\) or _in the order of n_. The second is in \\(O(n)\\) as well. The third is in \\(O(\\log n)\\).\n- It’s the shape of the curve that shows the efficiency of an algorithm. Some common running times we may see are:\n\n  - \\(O(n^2)\\)\n  - \\(O(n \\log n)\\)\n  - \\(O(n)\\)\n  - \\(O(\\log n)\\)\n  - \\(O(1)\\)\n\n- Of the running times above, \\(O(n^2)\\) is considered the worst running time, \\(O(1)\\) is the fastest.\n- Linear search was of order \\(O(n)\\) because it could take _n_ steps in the worst case to run.\n- Binary search was of order \\(O(\\log n)\\) because it would take fewer and fewer steps to run even in the worst case.\n- Programmers are interested in both the worst case, or _upper bound_, and the best case, or _lower bound_.\n- The \\(\\Omega\\) symbol is used to denote the best case of an algorithm, such as \\(\\Omega(\\log n)\\).\n- The \\(\\Theta\\) symbol is used to denote where the upper bound and lower bound are the same, where the best case and the worst case running times are the same.\n- As you continue to develop your knowledge in computer science, you will explore these topics in more detail in future courses.\n\n## [search.c](https://cs50.harvard.edu/x/2024/notes/3/#searchc)\n\n- You can implement linear search ourselves by typing `code search.c` in your terminal window and by writing code as follows:\n\n  ```c\n  #include <cs50.h>\n  #include <stdio.h>\n\n  int main(void)\n  {\n      // An array of integers\n      int numbers[] = {20, 500, 10, 5, 100, 1, 50};\n\n      // Search for number\n      int n = get_int(\"Number: \");\n      for (int i = 0; i < 7; i++)\n      {\n          if (numbers[i] == n)\n          {\n              printf(\"Found\\n\");\n              return 0;\n          }\n      }\n      printf(\"Not found\\n\");\n      return 1;\n  }\n  ```\n\n  Notice that the line beginning with `int numbers[]` allows us to define the values of each element of the array as we create it. Then, in the `for` loop, we have an implementation of linear search. `return 0` is used to indicate success and exit the program. `return 1` is used to exist the program with an error (failure).\n\n- We have now implemented linear search ourselves in C!\n- What if we wanted to search for a string within an array? Modify your code as follows:\n\n  ```c\n  #include <cs50.h>\n  #include <stdio.h>\n  #include <string.h>\n\n  int main(void)\n  {\n      // An array of strings\n      string strings[] = {\"battleship\", \"boot\", \"cannon\", \"iron\", \"thimble\", \"top hat\"};\n\n      // Search for string\n      string s = get_string(\"String: \");\n      for (int i = 0; i < 6; i++)\n      {\n          if (strcmp(strings[i], s) == 0)\n          {\n              printf(\"Found\\n\");\n              return 0;\n          }\n      }\n      printf(\"Not found\\n\");\n      return 1;\n  }\n  ```\n\n  Notice that we cannot utilize `==` as in our previous iteration of this program. Instead, we use `strcmp`, which comes from the `string.h` library. `strcmp` will return `0` if the strings are the same.\n\n- Indeed, running this code allows us to iterate over this array of strings to see if a certain string was within it. However, if you see a _segmentation fault_, where a part of memory was touched by your program that it should not have access to, do make sure you have `i < 6` noted above instead of `i < 7`.\n- We can combine these ideas of both numbers and strings into a single program. Type `code phonebook.c` into your terminal window and write code as follows:\n\n  ```c\n  #include <cs50.h>\n  #include <stdio.h>\n  #include <string.h>\n\n  int main(void)\n  {\n      // Arrays of strings\n      string names[] = {\"Carter\", \"David\", \"John\"};\n      string numbers[] = {\"+1-617-495-1000\", \"+1-617-495-1000\", \"+1-949-468-2750\"};\n\n      // Search for name\n      string name = get_string(\"Name: \");\n      for (int i = 0; i < 3; i++)\n      {\n          if (strcmp(names[i], name) == 0)\n          {\n              printf(\"Found %s\\n\", numbers[i]);\n              return 0;\n          }\n      }\n      printf(\"Not found\\n\");\n      return 1;\n  }\n  ```\n\n  Notice that Carter’s number begins with `+1-617`, David’s phone number starts with `+1-617`, and John’s number starts with `+1-949`. Therefore, `names[0]` is Carter and `numbers[0]` is Carter’s number. This code will allow us to search the phonebook to for a person’s specific number.\n\n- While this code works, there are numerous inefficiencies. Indeed, there is a chance that people’s names and numbers may not correspond. Wouldn’t be nice if we could create our own data type where we could associate a person with the phone number?\n\n## [Data Structures](https://cs50.harvard.edu/x/2024/notes/3/#data-structures)\n\n- It turns out that C allows a way by which we can create our own data types via a `struct`.\n- Would it not be useful to create our own data type called a `person`, that has inside of it a `name` and `number`.\n- Modify your code as follows:\n\n  ```c\n  #include <cs50.h>\n  #include <stdio.h>\n  #include <string.h>\n\n  typedef struct\n  {\n      string name;\n      string number;\n  }\n  person;\n\n  int main(void)\n  {\n      person people[3];\n\n      people[0].name = \"Carter\";\n      people[0].number = \"+1-617-495-1000\";\n\n      people[1].name = \"David\";\n      people[1].number = \"+1-617-495-1000\";\n\n      people[2].name = \"John\";\n      people[2].number = \"+1-949-468-2750\";\n\n      // Search for name\n      string name = get_string(\"Name: \");\n      for (int i = 0; i < 3; i++)\n      {\n          if (strcmp(people[i].name, name) == 0)\n          {\n              printf(\"Found %s\\n\", people[i].number);\n              return 0;\n          }\n      }\n      printf(\"Not found\\n\");\n      return 1;\n  }\n  ```\n\n  Notice that the code begins with `typedef struct` where a new datatype called `person` is defined. Inside a `person` is a string called `name` and a `string` called number. In the `main` function, begin by creating an array called `people` that is of type `person` that is a size of 3. Then, we update the names and phone numbers of the two people in our `people` array. Most important, notice how the _dot notation_ such as `people[0].name` allows us to access the `person` at the 0th location and assign that individual a name.\n\n## [Sorting](https://cs50.harvard.edu/x/2024/notes/3/#sorting)\n\n- _Sorting_ is the act of taking an unsorted list of values and transforming this list into a sorted one.\n- When a list is sorted, searching that list is far less taxing on the computer. Recall that we can use binary search on a sorted list, but not on an unsorted one.\n- It turns out that there are many different types of sorting algorithms.\n- _Selection sort_ is one such search algorithm.\n- We can represent an array as follows:\n\n  ![Seven red lockers side by side with the last labeled as n-1](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide104.png \"red lockers\")\n\n- The algorithm for selection sort in pseudocode is:\n\n  ```\n  For i from 0 to n–1\n      Find smallest number between numbers[i] and numbers[n-1]\n      Swap smallest number with numbers[i]\n  ```\n\n- Summarizing those steps, the first time iterating through the list took `n - 1` steps. The second time, it took `n - 2` steps. Carrying this logic forward, the steps required could be represented as follows:\n\n  ```\n  (n - 1) + (n - 2) + (n - 3) + ... + 1\n  ```\n\n- This could be simplified to n(n-1)/2 or, more simply, \\(O(n^2)\\).\n\n## [Bubble Sort](https://cs50.harvard.edu/x/2024/notes/3/#bubble-sort)\n\n- _Bubble sort_ is another sorting algorithm that works by repeatedly swapping elements to “bubble” larger elements to the end.\n- The pseudocode for bubble sort is:\n\n  ```\n  Repeat n-1 times\n      For i from 0 to n–2\n          If numbers[i] and numbers[i+1] out of order\n              Swap them\n      If no swaps\n          Quit\n  ```\n\n- As we further sort the array, we know more and more of it becomes sorted, so we only need to look at the pairs of numbers that haven’t been sorted yet.\n- Analyzing selection sort, we made only seven comparisons. Representing this mathematically, where _n_ represents the number of cases, it could be said that selection sort can be analyzed as:\n\n  ```\n  (n - 1) + (n - 2) + (n - 3) + ... + 1\n  ```\n\n  or, more simply \\(n^2/2 - n/2\\).\n\n- Considering that mathematical analysis, n2 is really the most influential factor in determining the efficiency of this algorithm. Therefore, selection sort is considered to be of the order of \\(O(n^2)\\) in the worst case where all values are unsorted. Even when all values are sorted, it will take the same number of steps. Therefore, the best case can be noted as \\(\\Omega(n^2)\\). Since both the upper bound and lower bound cases are the same, the efficiency of this algorithm as a whole can be regarded as \\(\\Theta(n^2)\\).\n- Analyzing bubble sort, the worst case is \\(O(n^2)\\). The best case is \\(\\Omega(n)\\).\n- You can [visualize](https://www.cs.usfca.edu/~galles/visualization/ComparisonSort.html) a comparison of these algorithms.\n\n## [Recursion](https://cs50.harvard.edu/x/2024/notes/3/#recursion)\n\n- How could we improve our efficiency in our sorting?\n- _Recursion_ is a concept within programming where a function calls itself. We saw this earlier when we saw…\n\n  ```\n  If no doors left\n      Return false\n  If number behind middle door\n      Return true\n  Else if number < middle door\n      Search left half\n  Else if number > middle door\n      Search right half\n  ```\n\n  Notice that we are calling `search` on smaller and smaller iterations of this problem.\n\n- Similarly, in our pseudocode for Week 0, you can see where recursion was implemented:\n\n  ```\n  1  Pick up phone book\n  2  Open to middle of phone book\n  3  Look at page\n  4  If person is on page\n  5      Call person\n  6  Else if person is earlier in book\n  7      Open to middle of left half of book\n  8      Go back to line 3\n  9  Else if person is later in book\n  10     Open to middle of right half of book\n  11     Go back to line 3\n  12 Else\n  13     Quit\n  ```\n\n- This code could have been simplified, to highlight its recursive properties as follows:\n\n  ```\n  1  Pick up phone book\n  2  Open to middle of phone book\n  3  Look at page\n  4  If person is on page\n  5      Call person\n  6  Else if person is earlier in book\n  7      Search left half of book\n  9  Else if person is later in book\n  10     Search right half of book\n  12 Else\n  13     Quit\n  ```\n\n- Consider how in Week 1 we wanted to create a pyramid structure as follows:\n\n  ```\n    #\n    ##\n    ###\n    ####\n  ```\n\n- To implement this using recursion, type `code recursion.c` into your terminal window and write code as follows:\n\n  ```c\n  #include <cs50.h>\n  #include <stdio.h>\n\n  void draw(int n);\n\n  int main(void)\n  {\n      draw(1);\n  }\n\n  void draw(int n)\n  {\n      for (int i = 0; i < n; i++)\n      {\n          printf(\"#\");\n      }\n      printf(\"\\n\");\n\n      draw(n + 1);\n  }\n  ```\n\n  Notice that the draw function calls itself. Further, note that your code may get caught in an infinite loop. To break from this loop, if you get stuck, hit `ctrl-c` on your keyboard. The reason this creates an infinite loop is that there is nothing telling the program to end. There is no case where the program is done.\n\n- We can correct our code as follows:\n\n  ```c\n  #include <cs50.h>\n  #include <stdio.h>\n\n  void draw(int n);\n\n  int main(void)\n  {\n      // Get height of pyramid\n      int height = get_int(\"Height: \");\n\n      // Draw pyramid\n      draw(height);\n  }\n\n  void draw(int n)\n  {\n      // If nothing to draw\n      if (n <= 0)\n      {\n          return;\n      }\n\n      // Draw pyramid of height n - 1\n      draw(n - 1);\n\n      // Draw one more row of width n\n      for (int i = 0; i < n; i++)\n      {\n          printf(\"#\");\n      }\n      printf(\"\\n\");\n  }\n  ```\n\n  Notice the _base case_ will ensure the code does not run forever. The line `if (n <= 0)` terminates the recursion because the problem has been solved. Every time `draw` calls itself, it calls itself by `n-1`. At some point, `n-1` will equal `0`, resulting in the `draw` function returning and the program will end.\n\n## [Merge Sort](https://cs50.harvard.edu/x/2024/notes/3/#merge-sort)\n\n- We can now leverage recursion in our quest for a more efficient sort algorithm and implement what is called _merge sort_, a very efficient sort algorithm.\n- The pseudocode for merge sort is quite short:\n\n  ```\n  If only one number\n      Quit\n  Else\n      Sort left half of number\n      Sort right half of number\n      Merge sorted halves\n  ```\n\n- Consider the following list of numbers:\n\n  ```\n  6341\n  ```\n\n- First, merge sort asks, “is this one number?” The answer is “no,” so the algorithm continues.\n\n  ```\n  6341\n  ```\n\n- Second, merge sort will now split the numbers down the middle (or as close as it can get) and sort the left half of numbers.\n\n  ```\n  63|41\n  ```\n\n- Third, merge sort would look at these numbers on the left and ask, “is this one number?” Since the answer is no, it would then split the numbers on the left down the middle.\n\n  ```\n  6|3\n  ```\n\n- Fourth, merge sort will again ask , “is this one number?” The answer is yes this time! Therefore, it will quit this task and return to the last task it was running at this point:\n\n  ```\n  63|41\n  ```\n\n- Fifth, merge sort will sort the numbers on the left.\n\n  ```\n  36|41\n  ```\n\n- Now, we return to where we left off in the pseudocode now that the left side has been sorted. A similar process of steps 3-5 will occur with the right-hand numbers. This will result in:\n\n  ```\n  36|14\n  ```\n\n- Both halves are now sorted. Finally, the algorithm will merge both sides. It will look at the first number on the left and the first number on the right. It will put the smaller number first, then the second smallest. The algorithm will repeat this for all numbers, resulting in:\n\n  ```\n  1346\n  ```\n\n- Merge sort is complete, and the program quits.\n- Merge sort is a very efficient sort algorithm with a worst case of \\(O(n \\log n)\\). The best case is still \\(\\Omega(n \\log n)\\) because the algorithm still must visit each place in the list. Therefore, merge sort is also \\(\\Theta(n \\log n)\\) since the best case and worst case are the same.\n- A final [visualization](https://www.youtube.com/watch?v=ZZuD6iUe3Pc) was shared.\n\n## [Summing Up](https://cs50.harvard.edu/x/2024/notes/3/#summing-up)\n\nIn this lesson, you learned about algorithmic thinking and building your own data types. Specifically, you learned…\n\n- Algorithms.\n- Big _O_ notation.\n- Binary search and linear search.\n- Various sort algorithms, including bubble sort, selection sort, and merge sort.\n- Recursion.\n\nSee you next time!",
+        "document_metadata": {
+          "document_type": "notes",
+          "week": "3",
+          "title": "Lecture 3",
+          "original_link": "https://cs50.harvard.edu/x/2024/notes/3/#lecture-3",
+          "related_files": "[\"week-3-transcription.md\", \"problemset/week-3-plurality.md\", \"problemset/week-3-problemset.md\", \"problemset/week-3-runoff.md\", \"problemset/week-3-sort.md\", \"problemset/week-3-tideman.md\"]",
+          "path": "/week-3/week-3-notes.md"
+        },
+        "headlines": [
+          "Welcome!",
+          "Linear Search",
+          "Binary Search",
+          "Running Time",
+          "Data Structures",
+          "Sorting",
+          "Bubble Sort",
+          "Recursion",
+          "Merge Sort",
+          "Summing Up"
+        ],
+        "keyphrases": [
+          "algorithms",
+          "binary search",
+          "linear search",
+          "bubble sort",
+          "selection sort",
+          "merge sort",
+          "recursion",
+          "Big O notation",
+          "data types",
+          "algorithmic thinking"
+        ]
+      },
+      "type": "document"
+    },
+    {
+      "id": "c2bf58f1-1b06-4173-b5a6-d35497b18345",
+      "properties": {
+        "page_content": "# [Sort](https://cs50.harvard.edu/x/2024/psets/3/sort/#sort)\n\n## [Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/sort/#problem-to-solve)\n\nRecall from lecture that we saw a few algorithms for sorting a sequence of numbers: selection sort, bubble sort, and merge sort.\n\n- Selection sort iterates through the unsorted portions of a list, selecting the smallest element each time and moving it to its correct location.\n- Bubble sort compares pairs of adjacent values one at a time and swaps them if they are in the incorrect order. This continues until the list is sorted.\n- Merge sort recursively divides the list into two repeatedly and then merges the smaller lists back into a larger one in the correct order.\n\nIn this problem, you’ll analyze three (compiled!) sorting programs to determine which algorithms they use. In a file called `answers.txt` in a folder called `sort`, record your answers, along with an explanation for each program, by filling in the blanks marked `TODO`.\n\n## [Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/sort/#distribution-code)\n\nFor this problem, you’ll need some “distribution code”—that is, code written by CS50’s staff. Provided to you are three already-compiled C programs, `sort1`, `sort2`, and `sort3`, as well as several `.txt` files for input and another file, `answers.txt`, in which to write your answers. Each of `sort1`, `sort2`, and `sort3` implements a different sorting algorithm: selection sort, bubble sort, or merge sort (though not necessarily in that order!). Your task is to determine which sorting algorithm is used by each file. Start by downloading these files.\n\n<details>\n<summary>Download distribution files</summary>\n\nOpen [VS Code](https://cs50.dev/).\n\nStart by clicking inside your terminal window, then execute `cd` by itself. You should find that its “prompt” resembles the below.\n\n```\n$\n```\n\nClick inside of that terminal window and then execute\n\n```\nwget https://cdn.cs50.net/2023/fall/psets/3/sort.zip\n```\n\nfollowed by Enter in order to download a ZIP called `sort.zip` in your codespace. Take care not to overlook the space between `wget` and the following URL, or any other character for that matter!\n\nNow execute\n\n```\nunzip sort.zip\n```\n\nto create a folder called `sort`. You no longer need the ZIP file, so you can execute\n\n```\nrm sort.zip\n```\n\nand respond with “y” followed by Enter at the prompt to remove the ZIP file you downloaded.\n\n</details>\n\n## [Hints](https://cs50.harvard.edu/x/2024/psets/3/sort/#hints)\n\nClick the below toggles to read some advice!\n\n<details>\n<summary>Explore the .txt files</summary>\n\n- Multiple `.txt` files are provided to you. These files contain `n` lines of values, either reversed, shuffled, or sorted.\n  - For example, `reversed10000.txt` contains 10000 lines of numbers that are reversed from `10000`, while `random50000.txt` contains 50000 lines of numbers that are in random order.\n- The different types of `.txt` files may help you determine which sort is which. Consider how each algorithm performs with an already sorted list. How about a reversed list? Or shuffled list? It may help to work through a smaller list of each type and walk through each sorting process.\n</details>\n<details>\n<summary>Time each sort with different inputs</summary>\n\n- To run the sorts on the text files, in the terminal, run `./[program_name] [text_file.txt]`. Make sure you have made use of `cd` to move into the `sort` directory!\n  - For example, to sort `reversed10000.txt` with `sort1`, run `./sort1 reversed10000.txt`.\n- You may find it helpful to time your sorts. To do so, run `time ./[sort_file] [text_file.txt]`.\n  - For example, you could run `time ./sort1 reversed10000.txt` to run `sort1` on 10,000 reversed numbers. At the end of your terminal’s output, you can look at the `real` time to see how much time actually elapsed while running the program.\n  </details>\n\n## [Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/sort/#walkthrough)\n\n<iframe src=\"https://youtube.com/embed/-Bhxxw6JKKY\"></iframe>\n\n<details>\n<summary>Not sure how to solve?</summary>\n<iframe src=\"https://youtube.com/embed/uOYhrBs37j0\"></iframe>\n</details>\n\n## [How to Test](https://cs50.harvard.edu/x/2024/psets/3/sort/#how-to-test)\n\n### [Correctness](https://cs50.harvard.edu/x/2024/psets/3/sort/#correctness)\n\n```\ncheck50 cs50/problems/2024/x/sort\n```\n\n## [How to Submit](https://cs50.harvard.edu/x/2024/psets/3/sort/#how-to-submit)\n\n```\nsubmit50 cs50/problems/2024/x/sort\n```",
+        "document_metadata": {
+          "document_type": "exercise",
+          "week": "3",
+          "title": "Sort",
+          "original_link": "https://cs50.harvard.edu/x/2024/psets/3/sort/#sort",
+          "related_files": "[\"week-3-notes.md\", \"week-3-transcription.md\", \"problemset/week-3-plurality.md\", \"problemset/week-3-problemset.md\", \"problemset/week-3-runoff.md\", \"problemset/week-3-tideman.md\"]",
+          "path": "/week-3/problemset/week-3-sort.md"
+        },
+        "headlines": [
+          "Problem to Solve",
+          "Distribution Code",
+          "Hints",
+          "Walkthrough",
+          "How to Test",
+          "Correctness",
+          "How to Submit"
+        ],
+        "keyphrases": [
+          "sorting algorithms",
+          "selection sort",
+          "bubble sort",
+          "merge sort",
+          "distribution code",
+          "C programs",
+          "answers.txt",
+          "text files",
+          "reversed list",
+          "shuffled list"
+        ]
+      },
+      "type": "document"
+    },
+    {
+      "id": "02e15364-0c00-406a-b1ac-216ea80f7269",
+      "properties": {
+        "page_content": "# [Tideman](https://cs50.harvard.edu/x/2024/psets/3/tideman/#tideman)\n\n## [Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/tideman/#problem-to-solve)\n\nYou already know about plurality elections, which follow a very simple algorithm for determining the winner of an election: every voter gets one vote, and the candidate with the most votes wins.\n\nBut the plurality vote does have some disadvantages. What happens, for instance, in an election with three candidates, and the ballots below are cast?\n\n![Five ballots, tie betweeen Alice and Bob](https://cs50.harvard.edu/x/2024/psets/3/fptp_ballot_1.png)\n\nA plurality vote would here declare a tie between Alice and Bob, since each has two votes. But is that the right outcome?\n\nThere’s another kind of voting system known as a ranked-choice voting system. In a ranked-choice system, voters can vote for more than one candidate. Instead of just voting for their top choice, they can rank the candidates in order of preference. The resulting ballots might therefore look like the below.\n\n![Five ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/ranked_ballot_1.png)\n\nHere, each voter, in addition to specifying their first preference candidate, has also indicated their second and third choices. And now, what was previously a tied election could now have a winner. The race was originally tied between Alice and Bob. But the voter who chose Charlie preferred Alice over Bob, so Alice could here be declared the winner.\n\nRanked choice voting can also solve yet another potential drawback of plurality voting. Take a look at the following ballots.\n\n![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/condorcet_1.png)\n\nWho should win this election? In a plurality vote where each voter chooses their first preference only, Charlie wins this election with four votes compared to only three for Bob and two for Alice. (Note that, if you’re familiar with the instant runoff voting system, Charlie wins here under that system as well). Alice, however, might reasonably make the argument that she should be the winner of the election instead of Charlie: after all, of the nine voters, a majority (five of them) preferred Alice over Charlie, so most people would be happier with Alice as the winner instead of Charlie.\n\nAlice is, in this election, the so-called “Condorcet winner” of the election: the person who would have won any head-to-head matchup against another candidate. If the election had been just Alice and Bob, or just Alice and Charlie, Alice would have won.\n\nThe Tideman voting method (also known as “ranked pairs”) is a ranked-choice voting method that’s guaranteed to produce the Condorcet winner of the election if one exists. In a file called `tideman.c` in a folder called `tideman`, create a program to simulate an election by the Tideman voting method.\n\n## [Demo](https://cs50.harvard.edu/x/2024/psets/3/tideman/#demo)\n\n```\n$ make tideman\n$ ./tideman Alice Bob Charlie\nNumber of voters: 3\nRank 1: Alice\nRank 2: Bob\nRank 3: Charlie\n\nRank 1: Bob\nRank 2: Charlie\nRank 3: Alice\n\nRank 1: Alice\nRank 2: Bob\nRank 3: Charlie\n\nAlice\n$ ./tideman Alice Bob Charlie\nNumber of voters: 3\nRank 1: David\nInvalid vote.\n$ ./tideman\nUsage: tideman [candidate ...]\n$\n```\n\n## [Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/tideman/#distribution-code)\n\n<details>\n<summary>Download the distribution code</summary>\n\nLog into [cs50.dev](https://cs50.dev/), click on your terminal window, and execute `cd` by itself. You should find that your terminal window’s prompt resembles the below:\n\n```\n$\n```\n\nNext execute\n\n```\nwget https://cdn.cs50.net/2023/fall/psets/3/tideman.zip\n```\n\nin order to download a ZIP called `tideman.zip` into your codespace.\n\nThen execute\n\n```\nunzip tideman.zip\n```\n\nto create a folder called `tideman`. You no longer need the ZIP file, so you can execute\n\n```\nrm tideman.zip\n```\n\nand respond with “y” followed by Enter at the prompt to remove the ZIP file you downloaded.\n\nNow type\n\n```\ncd tideman\n```\n\nfollowed by Enter to move yourself into (i.e., open) that directory. Your prompt should now resemble the below.\n\n```\ntideman/ $\n```\n\nIf all was successful, you should execute\n\n```\nls\n```\n\nand see a file named `tideman.c`. Executing `code tideman.c` should open the file where you will type your code for this problem set. If not, retrace your steps and see if you can determine where you went wrong!\n\n</details>\n\n## [Background](https://cs50.harvard.edu/x/2024/psets/3/tideman/#background)\n\nGenerally speaking, the Tideman method works by constructing a “graph” of candidates, where an arrow (i.e. edge) from candidate A to candidate B indicates that candidate A wins against candidate B in a head-to-head matchup. The graph for the above election, then, would look like the below.\n\n![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/condorcet_graph_1.png)\n\nThe arrow from Alice to Bob means that more voters prefer Alice to Bob (5 prefer Alice, 4 prefer Bob). Likewise, the other arrows mean that more voters prefer Alice to Charlie, and more voters prefer Charlie to Bob.\n\nLooking at this graph, the Tideman method says the winner of the election should be the “source” of the graph (i.e. the candidate that has no arrow pointing at them). In this case, the source is Alice — Alice is the only one who has no arrow pointing at her, which means nobody is preferred head-to-head over Alice. Alice is thus declared the winner of the election.\n\nIt’s possible, however, that when the arrows are drawn, there is no Condorcet winner. Consider the below ballots.\n\n![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/no_condorcet_1.png)\n\nBetween Alice and Bob, Alice is preferred over Bob by a 7-2 margin. Between Bob and Charlie, Bob is preferred over Charlie by a 5-4 margin. But between Charlie and Alice, Charlie is preferred over Alice by a 6-3 margin. If we draw out the graph, there is no source! We have a cycle of candidates, where Alice beats Bob who beats Charlie who beats Alice (much like a game of rock-paper-scissors). In this case, it looks like there’s no way to pick a winner.\n\nTo handle this, the Tideman algorithm must be careful to avoid creating cycles in the candidate graph. How does it do this? The algorithm locks in the strongest edges first, since those are arguably the most significant. In particular, the Tideman algorithm specifies that matchup edges should be “locked in” to the graph one at a time, based on the “strength” of the victory (the more people who prefer a candidate over their opponent, the stronger the victory). So long as the edge can be locked into the graph without creating a cycle, the edge is added; otherwise, the edge is ignored.\n\nHow would this work in the case of the votes above? Well, the biggest margin of victory for a pair is Alice beating Bob, since 7 voters prefer Alice over Bob (no other head-to-head matchup has a winner preferred by more than 7 voters). So the Alice-Bob arrow is locked into the graph first. The next biggest margin of victory is Charlie’s 6-3 victory over Alice, so that arrow is locked in next.\n\nNext up is Bob’s 5-4 victory over Charlie. But notice: if we were to add an arrow from Bob to Charlie now, we would create a cycle! Since the graph can’t allow cycles, we should skip this edge, and not add it to the graph at all. If there were more arrows to consider, we would look to those next, but that was the last arrow, so the graph is complete.\n\nThis step-by-step process is shown below, with the final graph at right.\n\n![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/lockin.png)\n\nBased on the resulting graph, Charlie is the source (there’s no arrow pointing towards Charlie), so Charlie is declared the winner of this election.\n\nPut more formally, the Tideman voting method consists of three parts:\n\n- **Tally**: Once all of the voters have indicated all of their preferences, determine, for each pair of candidates, who the preferred candidate is and by what margin they are preferred.\n- **Sort**: Sort the pairs of candidates in decreasing order of strength of victory, where strength of victory is defined to be the number of voters who prefer the preferred candidate.\n- **Lock**: Starting with the strongest pair, go through the pairs of candidates in order and “lock in” each pair to the candidate graph, so long as locking in that pair does not create a cycle in the graph.\n\nOnce the graph is complete, the source of the graph (the one with no edges pointing towards it) is the winner!\n\n## [Understanding](https://cs50.harvard.edu/x/2024/psets/3/tideman/#understanding)\n\nLet’s take a look at `tideman.c`.\n\nFirst, notice the two-dimensional array `preferences`. The integer `preferences[i][j]` will represent the number of voters who prefer candidate `i` over candidate `j`.\n\nThe file also defines another two-dimensional array, called `locked`, which will represent the candidate graph. `locked` is a boolean array, so `locked[i][j]` being `true` represents the existence of an edge pointing from candidate `i` to candidate `j`; `false` means there is no edge. (If curious, this representation of a graph is known as an “adjacency matrix”).\n\nNext up is a `struct` called `pair`, used to represent a pair of candidates: each pair includes the `winner`’s candidate index and the `loser`’s candidate index.\n\nThe candidates themselves are stored in the array `candidates`, which is an array of `string`s representing the names of each of the candidates. There’s also an array of `pairs`, which will represent all of the pairs of candidates (for which one is preferred over the other) in the election.\n\nThe program also has two global variables: `pair_count` and `candidate_count`, representing the number of pairs and number of candidates in the arrays `pairs` and `candidates`, respectively.\n\nNow onto `main`. Notice that after determining the number of candidates, the program loops through the `locked` graph and initially sets all of the values to `false`, which means our initial graph will have no edges in it.\n\nNext, the program loops over all of the voters and collects their preferences in an array called `ranks` (via a call to `vote`), where `ranks[i]` is the index of the candidate who is the `i`th preference for the voter. These ranks are passed into the `record_preference` function, whose job it is to take those ranks and update the global `preferences` variable.\n\nOnce all of the votes are in, the pairs of candidates are added to the `pairs` array via a called to `add_pairs`, sorted via a call to `sort_pairs`, and locked into the graph via a call to `lock_pairs`. Finally, `print_winner` is called to print out the name of the election’s winner!\n\nFurther down in the file, you’ll see that the functions `vote`, `record_preference`, `add_pairs`,`sort_pairs`, `lock_pairs`, and `print_winner` are left blank. That’s up to you!\n\n## [Specification](https://cs50.harvard.edu/x/2024/psets/3/tideman/#specification)\n\nComplete the implementation of `tideman.c` in such a way that it simulates a Tideman election.\n\n- Complete the `vote` function.\n  - The function takes arguments `rank`, `name`, and `ranks`. If `name` is a match for the name of a valid candidate, then you should update the `ranks` array to indicate that the voter has the candidate as their `rank` preference (where `0` is the first preference, `1` is the second preference, etc.)\n  - Recall that `ranks[i]` here represents the user’s `i`th preference.\n  - The function should return `true` if the rank was successfully recorded, and `false` otherwise (if, for instance, `name` is not the name of one of the candidates).\n  - You may assume that no two candidates will have the same name.\n- Complete the `record_preferences` function.\n  - The function is called once for each voter, and takes as argument the `ranks` array, (recall that `ranks[i]` is the voter’s `i`th preference, where `ranks[0]` is the first preference).\n  - The function should update the global `preferences` array to add the current voter’s preferences. Recall that `preferences[i][j]` should represent the number of voters who prefer candidate `i` over candidate `j`.\n  - You may assume that every voter will rank each of the candidates.\n- Complete the `add_pairs` function.\n  - The function should add all pairs of candidates where one candidate is preferred to the `pairs` array. A pair of candidates who are tied (one is not preferred over the other) should not be added to the array.\n  - The function should update the global variable `pair_count` to be the number of pairs of candidates. (The pairs should thus all be stored between `pairs[0]` and `pairs[pair_count - 1]`, inclusive).\n- Complete the `sort_pairs` function.\n  - The function should sort the `pairs` array in decreasing order of strength of victory, where strength of victory is defined to be the number of voters who prefer the preferred candidate. If multiple pairs have the same strength of victory, you may assume that the order does not matter.\n- Complete the `lock_pairs` function.\n  - The function should create the `locked` graph, adding all edges in decreasing order of victory strength so long as the edge would not create a cycle.\n- Complete the `print_winner` function.\n  - The function should print out the name of the candidate who is the source of the graph. You may assume there will not be more than one source.\n\nYou should not modify anything else in `tideman.c` other than the implementations of the `vote`, `record_preferences`, `add_pairs`, `sort_pairs`, `lock_pairs`, and `print_winner` functions (and the inclusion of additional header files, if you’d like). You are permitted to add additional functions to `tideman.c`, so long as you do not change the declarations of any of the existing functions.\n\n## [Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/tideman/#walkthrough)\n\n<iframe src=\"https://www.youtube.com/embed/kb83NwyYI68?modestbranding=0&rel=0&showinfo=0\"></iframe>\n\n## [How to Test](https://cs50.harvard.edu/x/2024/psets/3/tideman/#how-to-test)\n\nBe sure to test your code to make sure it handles…\n\n- An election with any number of candidate (up to the `MAX` of `9`)\n- Voting for a candidate by name\n- Invalid votes for candidates who are not on the ballot\n- Printing the winner of the election\n\n### [Correctness](https://cs50.harvard.edu/x/2024/psets/3/tideman/#correctness)\n\n```\ncheck50 cs50/problems/2024/x/tideman\n```\n\n### [Style](https://cs50.harvard.edu/x/2024/psets/3/tideman/#style)\n\n```\nstyle50 tideman.c\n```\n\n## [How to Submit](https://cs50.harvard.edu/x/2024/psets/3/tideman/#how-to-submit)\n\n```\nsubmit50 cs50/problems/2024/x/tideman\n```",
+        "document_metadata": {
+          "document_type": "exercise",
+          "week": "3",
+          "title": "Tideman",
+          "original_link": "https://cs50.harvard.edu/x/2024/psets/3/tideman/#tideman",
+          "related_files": "[\"week-3-notes.md\", \"week-3-transcription.md\", \"problemset/week-3-plurality.md\", \"problemset/week-3-problemset.md\", \"problemset/week-3-runoff.md\", \"problemset/week-3-sort.md\"]",
+          "path": "/week-3/problemset/week-3-tideman.md"
+        },
+        "headlines": [
+          "## [Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/tideman/#problem-to-solve)",
+          "## [Demo](https://cs50.harvard.edu/x/2024/psets/3/tideman/#demo)",
+          "## [Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/tideman/#distribution-code)",
+          "## [Background](https://cs50.harvard.edu/x/2024/psets/3/tideman/#background)",
+          "## [Understanding](https://cs50.harvard.edu/x/2024/psets/3/tideman/#understanding)",
+          "## [Specification](https://cs50.harvard.edu/x/2024/psets/3/tideman/#specification)",
+          "## [Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/tideman/#walkthrough)",
+          "## [How to Test](https://cs50.harvard.edu/x/2024/psets/3/tideman/#how-to-test)",
+          "### [Correctness](https://cs50.harvard.edu/x/2024/psets/3/tideman/#correctness)",
+          "### [Style](https://cs50.harvard.edu/x/2024/psets/3/tideman/#style)"
+        ],
+        "keyphrases": [
+          "Tideman voting method",
+          "ranked-choice voting system",
+          "Condorcet winner",
+          "plurality vote",
+          "candidate graph",
+          "head-to-head matchup",
+          "Tideman algorithm",
+          "strength of victory",
+          "adjacency matrix",
+          "election"
+        ]
+      },
+      "type": "document"
+    },
+    {
+      "id": "6e3e78a6-9abb-4fd4-937d-baf0c44b0b16",
+      "properties": {
+        "page_content": "# [Runoff](https://cs50.harvard.edu/x/2024/psets/3/runoff/#runoff)\n\n## [Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/runoff/#problem-to-solve)\n\nYou already know about plurality elections, which follow a very simple algorithm for determining the winner of an election: every voter gets one vote, and the candidate with the most votes wins.\n\nBut the plurality vote does have some disadvantages. What happens, for instance, in an election with three candidates, and the ballots below are cast?\n\n![Five ballots, tie betweeen Alice and Bob](https://cs50.harvard.edu/x/2024/psets/3/fptp_ballot_1.png)\n\nA plurality vote would here declare a tie between Alice and Bob, since each has two votes. But is that the right outcome?\n\nThere’s another kind of voting system known as a ranked-choice voting system. In a ranked-choice system, voters can vote for more than one candidate. Instead of just voting for their top choice, they can rank the candidates in order of preference. The resulting ballots might therefore look like the below.\n\n![Five ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/ranked_ballot_1.png)\n\nHere, each voter, in addition to specifying their first preference candidate, has also indicated their second and third choices. And now, what was previously a tied election could now have a winner. The race was originally tied between Alice and Bob, so Charlie was out of the running. But the voter who chose Charlie preferred Alice over Bob, so Alice could here be declared the winner.\n\nRanked choice voting can also solve yet another potential drawback of plurality voting. Take a look at the following ballots.\n\n![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/ranked_ballot_3.png)\n\nWho should win this election? In a plurality vote where each voter chooses their first preference only, Charlie wins this election with four votes compared to only three for Bob and two for Alice. But a majority of the voters (5 out of the 9) would be happier with either Alice or Bob instead of Charlie. By considering ranked preferences, a voting system may be able to choose a winner that better reflects the preferences of the voters.\n\nOne such ranked choice voting system is the instant runoff system. In an instant runoff election, voters can rank as many candidates as they wish. If any candidate has a majority (more than 50%) of the first preference votes, that candidate is declared the winner of the election.\n\nIf no candidate has more than 50% of the vote, then an “instant runoff” occurrs. The candidate who received the fewest number of votes is eliminated from the election, and anyone who originally chose that candidate as their first preference now has their second preference considered. Why do it this way? Effectively, this simulates what would have happened if the least popular candidate had not been in the election to begin with.\n\nThe process repeats: if no candidate has a majority of the votes, the last place candidate is eliminated, and anyone who voted for them will instead vote for their next preference (who hasn’t themselves already been eliminated). Once a candidate has a majority, that candidate is declared the winner.\n\nSounds a bit more complicated than a plurality vote, doesn’t it? But it arguably has the benefit of being an election system where the winner of the election more accurately represents the preferences of the voters. In a file called `runoff.c` in a folder called `runoff`, create a program to simulate a runoff election.\n\n## [Demo](https://cs50.harvard.edu/x/2024/psets/3/runoff/#demo)\n\n```\nRank 1: Alice\nRank 2: Bob\nRank 3: Charlie\n\nAlice\n$ ./runoff Alice Bob Charlie\nNumber of voters: 3\nRank 1: David\nInvalid vote.\n$ ./runoff\nUsage: runoff [candidate ...]\n$\n```\n\n## [Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/runoff/#distribution-code)\n\n<details>\n<summary>Download the distribution code</summary>\n\nLog into [cs50.dev](https://cs50.dev/), click on your terminal window, and execute `cd` by itself. You should find that your terminal window’s prompt resembles the below:\n\n```\n$\n```\n\nNext execute\n\n```\nwget https://cdn.cs50.net/2023/fall/psets/3/runoff.zip\n```\n\nin order to download a ZIP called `runoff.zip` into your codespace.\n\nThen execute\n\n```\nunzip runoff.zip\n```\n\nto create a folder called `runoff`. You no longer need the ZIP file, so you can execute\n\n```\nrm runoff.zip\n```\n\nand respond with “y” followed by Enter at the prompt to remove the ZIP file you downloaded.\n\nNow type\n\n```\ncd runoff\n```\n\nfollowed by Enter to move yourself into (i.e., open) that directory. Your prompt should now resemble the below.\n\n```\nrunoff/ $\n```\n\nIf all was successful, you should execute\n\n```\nls\n```\n\nand see a file named `runoff.c`. Executing `code runoff.c` should open the file where you will type your code for this problem set. If not, retrace your steps and see if you can determine where you went wrong!\n\n</details>\n<details>\n<summary>Understand the code in runoff.c</summary>\n\nWhenever you’ll extend the functionality of existing code, it’s best to be sure you first understand it in its present state.\n\nLook at the top of `runoff.c` first. Two constants are defined: `MAX_CANDIDATES` for the maximum number of candidates in the election, and `MAX_VOTERS` for the maximum number of voters in the election.\n\n```c\n// Max voters and candidates\n#define MAX_VOTERS 100\n#define MAX_CANDIDATES 9\n```\n\nNotice that `MAX_CANDIDATES` is used to size an array, `candidates`.\n\n```c\n// Array of candidates\ncandidate candidates[MAX_CANDIDATES];\n```\n\n`candidates` is an array of `candidate`s. In `runoff.c` a `candidate` is a `struct`. Every `candidate` has a `string` field for their `name`, an `int` representing the number of `votes` they currently have, and a `bool` value called `eliminated` that indicates whether the candidate has been eliminated from the election. The array `candidates` will keep track of all of the candidates in the election.\n\n```c\n// Candidates have name, vote count, eliminated status\ntypedef struct\n{\n    string name;\n    int votes;\n    bool eliminated;\n}\ncandidate;\n```\n\nNow you can better understand `preferences`, the two-dimensional array. The array `preferences[i]` will represent all of the preferences for voter number `i`. The integer, `preferences[i][j]`, will store the index of the candidate, from the `candidates` array, who is the `j`th preference for voter `i`.\n\n```c\n// preferences[i][j] is jth preference for voter i\nint preferences[MAX_VOTERS][MAX_CANDIDATES];\n```\n\nThe program also has two global variables: `voter_count` and `candidate_count`.\n\n```c\n// Numbers of voters and candidates\nint voter_count;\nint candidate_count;\n```\n\nNow onto `main`. Notice that after determining the number of candidates and the number of voters, the main voting loop begins, giving every voter a chance to vote. As the voter enters their preferences, the `vote` function is called to keep track of all of the preferences. If at any point, the ballot is deemed to be invalid, the program exits.\n\nOnce all of the votes are in, another loop begins: this one’s going to keep looping through the runoff process of checking for a winner and eliminating the last place candidate until there is a winner.\n\nThe first call here is to a function called `tabulate`, which should look at all of the voters’ preferences and compute the current vote totals, by looking at each voter’s top choice candidate who hasn’t yet been eliminated. Next, the `print_winner` function should print out the winner if there is one; if there is, the program is over. But otherwise, the program needs to determine the fewest number of votes anyone still in the election received (via a call to `find_min`). If it turns out that everyone in the election is tied with the same number of votes (as determined by the `is_tie` function), the election is declared a tie; otherwise, the last-place candidate (or candidates) is eliminated from the election via a call to the `eliminate` function.\n\nIf you look a bit further down in the file, you’ll see that the rest of the functions—`vote`, `tabulate`, `print_winner`, `find_min`, `is_tie`, and `eliminate`—are all left to up to you to complete! **You should only modify these functions in runoff.c, though you may `#include` additional header files atop runoff.c if you’d like**\n\n</details>\n\n## [Hints](https://cs50.harvard.edu/x/2024/psets/3/runoff/#hints)\n\nClick the below toggles to read some advice!\n\n<details>\n<summary>Complete the vote function</summary>\n\nComplete the `vote` function.\n\n- The function takes three arguments: `voter`, `rank`, and `name`.\n- If `name` is a match for the name of a valid candidate, then you should update the global preferences array to indicate that the voter `voter` has that candidate as their `rank` preference. Keep in mind `0` is the first preference, `1` is the second preference, etc. You may assume that no two candidates will have the same name.\n- If the preference is successfully recorded, the function should return `true`. The function should return `false` otherwise. Consider, for instance, when `name` is not the name of one of the candidates.\n\nAs you write your code, consider these hints:\n\n- Recall that `candidate_count` stores the number of candidates in the election.\n- Recall that you can use [`strcmp`](https://man.cs50.io/3/strcmp) to compare two strings.\n- Recall that `preferences[i][j]` stores the index of the candidate who is the `j`th ranked preference for the `i`th voter.\n</details>\n<details>\n<summary>Complete the tabulate function</summary>\n\nComplete the `tabulate` function.\n\n- The function should update the number of `votes` each candidate has at this stage in the runoff.\n- Recall that at each stage in the runoff, every voter effectively votes for their top-preferred candidate who has not already been eliminated.\n\nAs you write your code, consider these hints:\n\n- Recall that `voter_count` stores the number of voters in the election and that, for each voter in our election, we want to count one ballot.\n- Recall that for a voter `i`, their top choice candidate is represented by `preferences[i][0]`, their second choice candidate by `preferences[i][1]`, etc.\n- Recall that the `candidate` `struct` has a field called `eliminated`, which will be `true` if the candidate has been eliminated from the election.\n- Recall that the `candidate` `struct` has a field called `votes`, which you’ll likely want to update for each voter’s preferred candidate.\n- Recall that once you’ve cast a vote for a voter’s first non-eliminated candidate, you’ll want to stop there, not continue down their ballot. You can break out of a loop early using `break` inside of a conditional.\n</details>\n<details>\n<summary>Complete the print_winner function</summary>\n\nComplete the `print_winner` function.\n\n- If any candidate has more than half of the vote, their name should be printed and the function should return `true`.\n- If nobody has won the election yet, the function should return `false`.\n\nAs you write your code, consider this hint:\n\n- Recall that `voter_count` stores the number of voters in the election. Given that, how would you express the number of votes needed to win the election?\n</details>\n<details>\n<summary>Complete the find_min function</summary>\n\nComplete the `find_min` function.\n\n- The function should return the minimum vote total for any candidate who is still in the election.\n\nAs you write your code, consider this hint:\n\n- You’ll likely want to loop through the candidates to find the one who is both still in the election and has the fewest number of votes. What information should you keep track of as you loop through the candidates?\n</details>\n<details>\n<summary>Complete the is_tie function</summary>\n\nComplete the `is_tie` function.\n\n- The function takes an argument `min`, which will be the minimum number of votes that anyone in the election currently has.\n- The function should return `true` if every candidate remaining in the election has the same number of votes, and should return `false` otherwise.\n\nAs you write your code, consider this hint:\n\n- Recall that a tie happens if every candidate still in the election has the same number of votes. Note, too, that the `is_tie` function takes an argument `min`, which is the smallest number of votes any candidate currently has. How might you use `min` to determine if the election is a tie (or, conversely, not a tie)?\n</details>\n<details>\n<summary>Complete the eliminate function</summary>\n\nComplete the `eliminate` function.\n\n- The function takes an argument `min`, which will be the minimum number of votes that anyone in the election currently has.\n- The function should eliminate the candidate (or candidates) who have `min` number of votes.\n</details>\n\n## [Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/runoff/#walkthrough)\n\n<iframe src=\"https://www.youtube.com/embed/-Vc5aGywKxo?modestbranding=0&rel=0&showinfo=0\"></iframe>\n\n## [How to Test](https://cs50.harvard.edu/x/2024/psets/3/runoff/#how-to-test)\n\nBe sure to test your code to make sure it handles…\n\n- An election with any number of candidate (up to the `MAX` of `9`)\n- Voting for a candidate by name\n- Invalid votes for candidates who are not on the ballot\n- Printing the winner of the election if there is only one\n- Not eliminating anyone in the case of a tie between all remaining candidates\n\n### [Correctness](https://cs50.harvard.edu/x/2024/psets/3/runoff/#correctness)\n\n```\ncheck50 cs50/problems/2024/x/runoff\n```\n\n### [Style](https://cs50.harvard.edu/x/2024/psets/3/runoff/#style)\n\n```\nstyle50 runoff.c\n```\n\n## [How to Submit](https://cs50.harvard.edu/x/2024/psets/3/runoff/#how-to-submit)\n\n```\nsubmit50 cs50/problems/2024/x/runoff\n```",
+        "document_metadata": {
+          "document_type": "exercise",
+          "week": "3",
+          "title": "Runoff",
+          "original_link": "https://cs50.harvard.edu/x/2024/psets/3/runoff/#runoff",
+          "related_files": "[\"week-3-notes.md\", \"week-3-transcription.md\", \"problemset/week-3-plurality.md\", \"problemset/week-3-problemset.md\", \"problemset/week-3-sort.md\", \"problemset/week-3-tideman.md\"]",
+          "path": "/week-3/problemset/week-3-runoff.md"
+        },
+        "headlines": [
+          "Problem to Solve",
+          "Demo",
+          "Distribution Code",
+          "Hints",
+          "Walkthrough",
+          "How to Test",
+          "Correctness",
+          "Style",
+          "How to Submit"
+        ],
+        "keyphrases": [
+          "ranked-choice voting system",
+          "plurality vote",
+          "runoff election",
+          "instant runoff system",
+          "ranked preferences",
+          "voter",
+          "candidate",
+          "voting system",
+          "preferences",
+          "election"
+        ]
+      },
+      "type": "document"
+    },
+    {
+      "id": "6e1f0090-56b2-4e93-881a-39f4d03b68c3",
+      "properties": {
+        "page_content": "# [Plurality](https://cs50.harvard.edu/x/2024/psets/3/plurality/#plurality) ## [ Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/plurality/#problem-to-solve) Elections come in all shapes and sizes. In the UK, the [Prime Minister](https://www.parliament.uk/education/about-your-parliament/general-elections/) is officially appointed by the monarch, who generally chooses the leader of the political party that wins the most seats in the House of Commons. The United States uses a multi-step [Electoral College](https://www.archives.gov/federal-register/electoral-college/about.html) process where citizens vote on how each state should allocate Electors who then elect the President. Perhaps the simplest way to hold an election, though, is via a method commonly known as the “plurality vote” (also known as “first-past-the-post” or “winner take all”). In the plurality vote, every voter gets to vote for one candidate. At the end of the election, whichever candidate has the greatest number of votes is declared the winner of the election. For this problem, you’ll implement a program that runs a plurality election, per the below. ## [ Demo](https://cs50.harvard.edu/x/2024/psets/3/plurality/#demo) ``` Alice $ ./plurality Alice Bob Charlie Number of voters: 3 Vote: Alice Vote: Bob Vote: Charlie Alice Bob Charlie $ ./plurality Usage: plurality [candidate ...] $ ``` ## [",
+        "keyphrases": [
+          "plurality vote",
+          "plurality election",
+          "Electoral College",
+          "Prime Minister",
+          "House of Commons",
+          "winner take all",
+          "first-past-the-post",
+          "plurality",
+          "candidate",
+          "voter"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "bdab49cb-b194-46cf-ac52-4aca1baca3d0",
+      "properties": {
+        "page_content": "Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/plurality/#distribution-code) For this problem, you’ll extend the functionality of “distribution code” provided to you by CS50’s staff. <details> <summary>Download the distribution code</summary> Log into [cs50.dev](https://cs50.dev/), click on your terminal window, and execute `cd` by itself. You should find that your terminal window’s prompt resembles the below: ``` $ ``` Next execute ``` wget https://cdn.cs50.net/2023/fall/psets/3/plurality.zip ``` in order to download a ZIP called `plurality.zip` into your codespace. Then execute ``` unzip plurality.zip ``` to create a folder called `plurality`. You no longer need the ZIP file, so you can execute ``` rm plurality.zip ``` and respond with “y” followed by Enter at the prompt to remove the ZIP file you downloaded. Now type ``` cd plurality ``` followed by Enter to move yourself into (i.e., open) that directory. Your prompt should now resemble the below. ``` plurality/ $ ``` If all was successful, you should execute ``` ls ``` and see a file named `plurality.c`. Executing `code plurality.c` should open the file where you will type your code for this problem set. If not, retrace your steps and see if you can determine where you went wrong! </details> <details> <summary>Understand the code inplurality.c</summary> Whenever you’ll extend the functionality of existing code, it’s best to be sure you first understand it in its present state. Look first at the top of the file. The line `#define MAX 9` is some syntax used here to mean that `MAX` is a constant (equal to `9`) that can be used throughout the program. Here, it represents the maximum number of candidates an election can have. ```c // Max number of candidates #define MAX 9 ``` Notice that `plurality.c` then uses this constant to define a global array—that is, an array that any function can access. ```c // Array of candidates candidate candidates[MAX]; ``` But what, in this case, is a `candidate`? In `plurality.c`, a `candidate` is a `struct`. Each `candidate` has two fields: a `string` called `name` representing the candidate’s name, and an `int` called `votes` representing the number of votes the candidate has. ```c // Candidates have name and vote count typedef struct { string name; int votes; } candidate; ``` Now, take a look at the `main` function itself. See if you can find where the program sets a global variable `candidate_count` representing the number of candidates in the election. ```c // Number of candidates int candidate_count; ``` What about where it copies command-line arguments into the array `candidates`? ```c // Populate array of candidates candidate_count = argc - 1; if (candidate_count > MAX) { printf(\"Maximum number of candidates is %i\\n\", MAX); return 2; } for (int i = 0; i < candidate_count; i++) { candidates[i].name = argv[i + 1]; candidates[i].votes = 0; } ``` And where it asks the user to type in the number of voters? ```c int voter_count = get_int(\"Number of voters: \"); ``` Then, the program lets every voter type in a vote, calling the `vote` function on each candidate voted for. Finally, `main` makes a call to the `print_winner` function to print out the winner (or winners) of the election. We’ll leave it to you to identify the code that implements this functionality. If you look further down in the file, though, you’ll notice that the `vote` and `print_winner` functions have been left blank. ```c // Update vote totals given a new vote bool vote(string name) { // TODO return false; } // Print the winner (or winners) of the election void print_winner(void) { // TODO return; } ``` This part is up to you to complete! **You should not modify anything else in `plurality.c` other than the implementations of the `vote` and `print_winner` functions (and the inclusion of additional header files, if you’d like).** </details> ## [",
+        "keyphrases": [
+          "distribution code",
+          "plurality.c",
+          "candidate",
+          "command-line arguments",
+          "vote",
+          "print_winner",
+          "election",
+          "number of candidates",
+          "voter_count",
+          "header files"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "97c878d7-1a92-426d-a130-e39768368545",
+      "properties": {
+        "page_content": "Hints](https://cs50.harvard.edu/x/2024/psets/3/plurality/#hints) Click the below toggles to read some advice! <details> <summary>Complete thevotefunction</summary> Next, complete the `vote` function. - Consider that `vote`’s signature, `bool vote(string name)`, shows it takes a single argument, a `string` called `name`, representing the name of the candidate who was voted for. - `vote` should return a `bool`, where `true` indicates a vote was successfully cast and `false` indicates it was not. One way to approach this problem is to do the following: 1. Iterate over each candidate 1. Check if candidate’s name matches the input, `name` 1. If yes, increment that candidate’s votes and return `true` 2. If no, continue checking 2. If no matches after checking each candidate, return `false` Let’s write some pseudocode to remind you to do just that: ```c // Update vote totals given a new vote bool vote(string name) { // Iterate over each candidate // Check if candidate's name matches given name // If yes, increment candidate's votes and return true // If no match, return false } ``` We’ll leave the implementation in code, though, up to you! </details> <details> <summary>Complete theprint_winnerfunction</summary> Finally, complete the `print_winner` function. - The function should print out the name of the candidate who received the most votes in the election, and then print a newline. - The election could end in a tie if multiple candidates each have the maximum number of votes. In that case, you should output the names of each of the winning candidates, each on a separate line. You might think a sorting algorithm would best solve this problem: imagine sorting candidates by their vote totals and printing the top candidate (or candidates). Recall, though, that sorting can be expensive: even Merge Sort, one of the fastest sorting algorithms, runs in \\(O(N \\space log(N))\\). Consider that you need only two pieces of information to solve this problem: 1. The maximum number of votes 2. The candidate (or candidates) with that number of votes As such, a good solution might require only two searches. Write some pseudocode to remind yourself to do just that: ```c // Print the winner (or winners) of the election void print_winner(void) { // Find the maximum number of votes // Print the candidate (or candidates) with maximum votes } ``` We’ll leave the code, though, up to you! </details> ## [ Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/plurality/#walkthrough) <iframe src=\"https://www.youtube.com/embed/ftOapzDjEb8?modestbranding=0&rel=0&showinfo=0\"></iframe> ## [ How to Test](https://cs50.harvard.edu/x/2024/psets/3/plurality/#how-to-test) Be sure to test your code to make sure it handles… - An election with any number of candidate (up to the `MAX` of `9`) - Voting for a candidate by name - Invalid votes for candidates who are not on the ballot - Printing the winner of the election if there is only one - Printing the winner of the election if there are multiple winners ### [ Correctness](https://cs50.harvard.edu/x/2024/psets/3/plurality/#correctness) ``` check50 cs50/problems/2024/x/plurality ``` ### [ Style](https://cs50.harvard.edu/x/2024/psets/3/plurality/#style) ``` style50 plurality.c ``` ## [ How to Submit](https://cs50.harvard.edu/x/2024/psets/3/plurality/#how-to-submit) ``` submit50 cs50/problems/2024/x/plurality ```",
+        "keyphrases": [
+          "vote function",
+          "print_winner function",
+          "maximum number of votes",
+          "election",
+          "candidate",
+          "voting",
+          "pseudocode",
+          "sorting algorithm",
+          "winning candidates",
+          "invalid votes"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "ed3ce6b7-d0b1-4c41-924c-6528efcfdf34",
+      "properties": {
+        "page_content": "Summing Up](#summing-up) ## [Welcome!](https://cs50.harvard.edu/x/2024/notes/3/#welcome) - In week zero, we introduced the idea of an _algorithm_: a black box that may take an input and creates an output. - This week, we are going to expand upon our understanding of algorithms through pseudocode and into code itself. - Also, we are going to consider the efficiency of these algorithms. Indeed, we are going to be building upon our understanding of how to use some of the _lower-level_ concepts we discussed last week in building algorithms. - Recall back to earlier in the course when we introduced the following graph: ![chart with: \"size of problem\" as x-axis; \"time to solve\" as y-axis; red, steep straight line from origin to top of graph close to yellow, less steep straight line from origin to top of graph both labeled \"n\"; green, curved line that gets less and less steep from origin to right of graph labeled \"log n)](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide010.png \"complexity\") - As we step into this week, you should consider how the way an algorithm works with a problem may determine the time it takes to solve a problem! Algorithms can be designed to be more and more efficient, to a limit. - Today, we will focus upon the design of algorithms and how to measure their efficiency. ## [Linear Search](https://cs50.harvard.edu/x/2024/notes/3/#linear-search) - Recall that last week you were introduced to the idea of an _array_, blocks of memory that are consecutive: side-by-side with one another. - You can metaphorically imagine an array like a series of seven red lockers as follows: ![Seven red lockers side by side](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide018.png \"lockers\") - We can imagine that we have an essential problem of wanting to know, “Is the number 50 inside an array?” A computer must look at each locker to be able to see if the number 50 is inside. We call this process of finding such a number, character, string, or other item _searching_. - We can potentially hand our array to an algorithm, wherein our algorithm will search through our lockers to see if the number 50 is behind one of the doors: Returning the value true or false. ![seven red lockers pointing to an empty box. Out of the empty box comes and output of bool](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide022.png \"lockers as algorithm\") - We can imagine various instructions we might provide our algorithm to undertake this task as follows: ``` For each door from left to right If 50 is behind door Return true Return false ``` Notice that the above instructions are called _pseudocode_: A human-readable version of the instructions that we could provide the computer. - A computer scientist could translate that pseudocode as follows: ``` For i from 0 to n-1 If 50 is behind doors[i] Return true Return false ``` Notice that the above is still not code, but it is a pretty close approximation of what the final code might look like. ## [Binary Search](https://cs50.harvard.edu/x/2024/notes/3/#binary-search) - _Binary search_ is another _search algorithm_ that could be employed in our task of finding the 50. - Assuming that the values within the lockers have been arranged from smallest to largest, the pseudocode for binary search would appear as follows: ``` If no doors left Return false If 50 is behind middle door Return true Else if 50 < middle door Search left half Else if 50 > middle door Search right half ``` - Using the nomenclature of code, we can further modify our algorithm as follows: ``` If no doors left Return false If 50 is behind doors[middle] Return true Else if 50 < doors[middle] Search doors[0] through doors[middle - 1] Else if 50 > doors[middle] Search doors[middle + 1] through doors[n - 1] ``` Notice, looking at this approximation of code, you can nearly imagine what this might look like in actual code. ## [Running Time](https://cs50.harvard.edu/x/2024/notes/3/#running-time) - _running time_ involves an analysis using _big O_ notation. Take a look at the following graph: ![chart with: \"size of problem\" as x-axis; \"time to solve\" as y-axis; red, steep straight line from origin to top of graph close to yellow, less steep straight line from origin to top of graph both labeled \"O(n)\"; green, curved line that gets less and less steep from origin to right of graph labeled \"O(log n)](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide042.png \"big o graphed\") - Rather than being ultra-specific about the mathematical efficiency of an algorithm, computer scientists discuss efficiency in terms of _the order of_ various running times. - In the above graph, the first algorithm is \\(O(n)\\) or _in the order of n_. The second is in \\(O(n)\\) as well. The third is in \\(O(\\log n)\\). - It’s the shape of the curve that shows the efficiency of an algorithm. Some common running times we may see are: - \\(O(n^2)\\) - \\(O(n \\log n)\\) - \\(O(n)\\) - \\(O(\\log n)\\) - \\(O(1)\\) - Of the running times above, \\(O(n^2)\\) is considered the worst running time, \\(O(1)\\) is the fastest. - Linear search was of order \\(O(n)\\) because it could take _n_ steps in the worst case to run. - Binary search was of order \\(O(\\log n)\\) because it would take fewer and fewer steps to run even in the worst case. - Programmers are interested in both the worst case, or _upper bound_, and the best case, or _lower bound_. - The \\(\\Omega\\) symbol is used to denote the best case of an algorithm, such as \\(\\Omega(\\log n)\\). - The \\(\\Theta\\) symbol is used to denote where the upper bound and lower bound are the same, where the best case and the worst case running times are the same. - As you continue to develop your knowledge in computer science, you will explore these topics in more detail in future courses. ## [search.c](https://cs50.harvard.edu/x/2024/notes/3/#searchc) - You can implement linear search ourselves by typing `code search.c` in your terminal window and by writing code as follows: ```c #include <cs50.h> #include <stdio.h> int main(void) { // An array of integers int numbers[] = {20, 500, 10, 5, 100, 1, 50}; // Search for number int n = get_int(\"Number: \"); for (int i = 0; i < 7; i++) { if (numbers[i] == n) { printf(\"Found\\n\"); return 0; } } printf(\"Not found\\n\"); return 1; } ``` Notice that the line beginning with `int numbers[]` allows us to define the values of each element of the array as we create it. Then, in the `for` loop, we have an implementation of linear search. `return 0` is used to indicate success and exit the program. `return 1` is used to exist the program with an error (failure). - We have now implemented linear search ourselves in C! - What if we wanted to search for a string within an array? Modify your code as follows: ```c #include <cs50.h> #include <stdio.h> #include <string.h> int main(void) { // An array of strings string strings[] = {\"battleship\", \"boot\", \"cannon\", \"iron\", \"thimble\", \"top hat\"}; // Search for string string s = get_string(\"String: \"); for (int i = 0; i < 6; i++) { if (strcmp(strings[i], s) == 0) { printf(\"Found\\n\"); return 0; } } printf(\"Not found\\n\"); return 1; } ``` Notice that we cannot utilize `==` as in our previous iteration of this program. Instead, we use `strcmp`, which comes from the `string.h` library. `strcmp` will return `0` if the strings are the same. - Indeed, running this code allows us to iterate over this array of strings to see if a certain string was within it. However, if you see a _segmentation fault_, where a part of memory was touched by your program that it should not have access to, do make sure you have `i < 6` noted above instead of `i < 7`. - We can combine these ideas of both numbers and strings into a single program. Type `code phonebook.c` into your terminal window and write code as follows: ```c #include <cs50.h> #include <stdio.h> #include <string.h> int main(void) { // Arrays of strings string names[] = {\"Carter\", \"David\", \"John\"}; string numbers[] = {\"+1-617-495-1000\", \"+1-617-495-1000\", \"+1-949-468-2750\"}; // Search for name string name = get_string(\"Name: \"); for (int i = 0; i < 3; i++) { if (strcmp(names[i], name) == 0) { printf(\"Found %s\\n\", numbers[i]); return 0; } } printf(\"Not found\\n\"); return 1; } ``` Notice that Carter’s number begins with `+1-617`, David’s phone number starts with `+1-617`, and John’s number starts with `+1-949`. Therefore, `names[0]` is Carter and `numbers[0]` is Carter’s number. This code will allow us to search the phonebook to for a person’s specific number. - While this code works, there are numerous inefficiencies. Indeed, there is a chance that people’s names and numbers may not correspond. Wouldn’t be nice if we could create our own data type where we could associate a person with the phone number? ## [Data Structures](https://cs50.harvard.edu/x/2024/notes/3/#data-structures) - It turns out that C allows a way by which we can create our own data types via a `struct`. - Would it not be useful to create our own data type called a `person`, that has inside of it a `name` and `number`. - Modify your code as follows: ```c #include <cs50.h> #include <stdio.h> #include <string.h> typedef struct { string name; string number; } person; int main(void) { person people[3]; people[0].name = \"Carter\"; people[0].number = \"+1-617-495-1000\"; people[1].name = \"David\"; people[1].number = \"+1-617-495-1000\"; people[2].name = \"John\"; people[2].number = \"+1-949-468-2750\"; // Search for name string name = get_string(\"Name: \"); for (int i = 0; i < 3; i++) { if (strcmp(people[i].name, name) == 0) { printf(\"Found %s\\n\", people[i].number); return 0; } } printf(\"Not found\\n\"); return 1; } ``` Notice that the code begins with `typedef struct` where a new datatype called `person` is defined. Inside a `person` is a string called `name` and a `string` called number. In the `main` function, begin by creating an array called `people` that is of type `person` that is a size of 3. Then, we update the names and phone numbers of the two people in our `people` array. Most important, notice how the _dot notation_ such as `people[0].name` allows us to access the `person` at the 0th location and assign that individual a name. ## [Sorting](https://cs50.harvard.edu/x/2024/notes/3/#sorting) - _Sorting_ is the act of taking an unsorted list of values and transforming this list into a sorted one. - When a list is sorted, searching that list is far less taxing on the computer. Recall that we can use binary search on a sorted list, but not on an unsorted one. - It turns out that there are many different types of sorting algorithms. - _Selection sort_ is one such search algorithm. - We can represent an array as follows: ![Seven red lockers side by side with the last labeled as n-1](https://cs50.harvard.edu/x/2024/notes/3/cs50Week3Slide104.png \"red lockers\") - The algorithm for selection sort in pseudocode is: ``` For i from 0 to n–1 Find smallest number between numbers[i] and numbers[n-1] Swap smallest number with numbers[i] ``` - Summarizing those steps, the first time iterating through the list took `n - 1` steps. The second time, it took `n - 2` steps. Carrying this logic forward, the steps required could be represented as follows: ``` (n - 1) + (n - 2) + (n - 3) + ... + 1 ``` - This could be simplified to n(n-1)/2 or, more simply, \\(O(n^2)\\). ## [Bubble Sort](https://cs50.harvard.edu/x/2024/notes/3/#bubble-sort) - _Bubble sort_ is another sorting algorithm that works by repeatedly swapping elements to “bubble” larger elements to the end. - The pseudocode for bubble sort is: ``` Repeat n-1 times For i from 0 to n–2 If numbers[i] and numbers[i+1] out of order Swap them If no swaps Quit ``` - As we further sort the array, we know more and more of it becomes sorted, so we only need to look at the pairs of numbers that haven’t been sorted yet. - Analyzing selection sort, we made only seven comparisons. Representing this mathematically, where _n_ represents the number of cases, it could be said that selection sort can be analyzed as: ``` (n - 1) + (n - 2) + (n - 3) + ... + 1 ``` or, more",
+        "keyphrases": [
+          "algorithms",
+          "pseudocode",
+          "binary search",
+          "linear search",
+          "running time",
+          "search algorithm",
+          "selection sort",
+          "bubble sort",
+          "data type",
+          "sorting algorithm"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "39ecf2e1-564f-474f-aaf8-81326a5e9da3",
+      "properties": {
+        "page_content": "# [Lecture 3](https://cs50.harvard.edu/x/2024/notes/3/#lecture-3) - [ Welcome!](#welcome) - [ Linear Search](#linear-search) - [ Binary Search](#binary-search) - [ Running Time](#running-time) - [search.c](#searchc) - [ Data Structures](#data-structures) - [ Sorting](#sorting) - [ Bubble Sort](#bubble-sort) - [ Recursion](#recursion) - [ Merge Sort](#merge-sort) - [",
+        "keyphrases": [
+          "Lecture 3",
+          "Linear Search",
+          "Binary Search",
+          "Running Time",
+          "Data Structures",
+          "Sorting",
+          "Bubble Sort",
+          "Recursion",
+          "Merge Sort",
+          "Welcome!"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "9240359e-7116-4c72-8fe6-ca30a312ced5",
+      "properties": {
+        "page_content": "simply \\(n^2/2 - n/2\\). - Considering that mathematical analysis, n2 is really the most influential factor in determining the efficiency of this algorithm. Therefore, selection sort is considered to be of the order of \\(O(n^2)\\) in the worst case where all values are unsorted. Even when all values are sorted, it will take the same number of steps. Therefore, the best case can be noted as \\(\\Omega(n^2)\\). Since both the upper bound and lower bound cases are the same, the efficiency of this algorithm as a whole can be regarded as \\(\\Theta(n^2)\\). - Analyzing bubble sort, the worst case is \\(O(n^2)\\). The best case is \\(\\Omega(n)\\). - You can [visualize](https://www.cs.usfca.edu/~galles/visualization/ComparisonSort.html) a comparison of these algorithms. ## [Recursion](https://cs50.harvard.edu/x/2024/notes/3/#recursion) - How could we improve our efficiency in our sorting? - _Recursion_ is a concept within programming where a function calls itself. We saw this earlier when we saw… ``` If no doors left Return false If number behind middle door Return true Else if number < middle door Search left half Else if number > middle door Search right half ``` Notice that we are calling `search` on smaller and smaller iterations of this problem. - Similarly, in our pseudocode for Week 0, you can see where recursion was implemented: ``` 1 Pick up phone book 2 Open to middle of phone book 3 Look at page 4 If person is on page 5 Call person 6 Else if person is earlier in book 7 Open to middle of left half of book 8 Go back to line 3 9 Else if person is later in book 10 Open to middle of right half of book 11 Go back to line 3 12 Else 13 Quit ``` - This code could have been simplified, to highlight its recursive properties as follows: ``` 1 Pick up phone book 2 Open to middle of phone book 3 Look at page 4 If person is on page 5 Call person 6 Else if person is earlier in book 7 Search left half of book 9 Else if person is later in book 10 Search right half of book 12 Else 13 Quit ``` - Consider how in Week 1 we wanted to create a pyramid structure as follows: ``` # ## ### #### ``` - To implement this using recursion, type `code recursion.c` into your terminal window and write code as follows: ```c #include <cs50.h> #include <stdio.h> void draw(int n); int main(void) { draw(1); } void draw(int n) { for (int i = 0; i < n; i++) { printf(\"#\"); } printf(\"\\n\"); draw(n + 1); } ``` Notice that the draw function calls itself. Further, note that your code may get caught in an infinite loop. To break from this loop, if you get stuck, hit `ctrl-c` on your keyboard. The reason this creates an infinite loop is that there is nothing telling the program to end. There is no case where the program is done. - We can correct our code as follows: ```c #include <cs50.h> #include <stdio.h> void draw(int n); int main(void) { // Get height of pyramid int height = get_int(\"Height: \"); // Draw pyramid draw(height); } void draw(int n) { // If nothing to draw if (n <= 0) { return; } // Draw pyramid of height n - 1 draw(n - 1); // Draw one more row of width n for (int i = 0; i < n; i++) { printf(\"#\"); } printf(\"\\n\"); } ``` Notice the _base case_ will ensure the code does not run forever. The line `if (n <= 0)` terminates the recursion because the problem has been solved. Every time `draw` calls itself, it calls itself by `n-1`. At some point, `n-1` will equal `0`, resulting in the `draw` function returning and the program will end. ## [Merge Sort](https://cs50.harvard.edu/x/2024/notes/3/#merge-sort) - We can now leverage recursion in our quest for a more efficient sort algorithm and implement what is called _merge sort_, a very efficient sort algorithm. - The pseudocode for merge sort is quite short: ``` If only one number Quit Else Sort left half of number Sort right half of number Merge sorted halves ``` - Consider the following list of numbers: ``` 6341 ``` - First, merge sort asks, “is this one number?” The answer is “no,” so the algorithm continues. ``` 6341 ``` - Second, merge sort will now split the numbers down the middle (or as close as it can get) and sort the left half of numbers. ``` 63|41 ``` - Third, merge sort would look at these numbers on the left and ask, “is this one number?” Since the answer is no, it would then split the numbers on the left down the middle. ``` 6|3 ``` - Fourth, merge sort will again ask , “is this one number?” The answer is yes this time! Therefore, it will quit this task and return to the last task it was running at this point: ``` 63|41 ``` - Fifth, merge sort will sort the numbers on the left. ``` 36|41 ``` - Now, we return to where we left off in the pseudocode now that the left side has been sorted. A similar process of steps 3-5 will occur with the right-hand numbers. This will result in: ``` 36|14 ``` - Both halves are now sorted. Finally, the algorithm will merge both sides. It will look at the first number on the left and the first number on the right. It will put the smaller number first, then the second smallest. The algorithm will repeat this for all numbers, resulting in: ``` 1346 ``` - Merge sort is complete, and the program quits. - Merge sort is a very efficient sort algorithm with a worst case of \\(O(n \\log n)\\). The best case is still \\(\\Omega(n \\log n)\\) because the algorithm still must visit each place in the list. Therefore, merge sort is also \\(\\Theta(n \\log n)\\) since the best case and worst case are the same. - A final [visualization](https://www.youtube.com/watch?v=ZZuD6iUe3Pc) was shared. ## [Summing Up](https://cs50.harvard.edu/x/2024/notes/3/#summing-up) In this lesson, you learned about algorithmic thinking and building your own data types. Specifically, you learned… - Algorithms. - Big _O_ notation. - Binary search and linear search. - Various sort algorithms, including bubble sort, selection sort, and merge sort. - Recursion. See you next time!",
+        "keyphrases": [
+          "merge sort",
+          "recursion",
+          "sort algorithm",
+          "bubble sort",
+          "selection sort",
+          "worst case",
+          "best case",
+          "Big O notation",
+          "binary search",
+          "linear search"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "9652acb3-ad81-43fd-a8c0-273e5ddecfe5",
+      "properties": {
+        "page_content": "# [Sort](https://cs50.harvard.edu/x/2024/psets/3/sort/#sort) ## [ Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/sort/#problem-to-solve) Recall from lecture that we saw a few algorithms for sorting a sequence of numbers: selection sort, bubble sort, and merge sort. - Selection sort iterates through the unsorted portions of a list, selecting the smallest element each time and moving it to its correct location. - Bubble sort compares pairs of adjacent values one at a time and swaps them if they are in the incorrect order. This continues until the list is sorted. - Merge sort recursively divides the list into two repeatedly and then merges the smaller lists back into a larger one in the correct order. In this problem, you’ll analyze three (compiled!) sorting programs to determine which algorithms they use. In a file called `answers.txt` in a folder called `sort`, record your answers, along with an explanation for each program, by filling in the blanks marked `TODO`. ## [ Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/sort/#distribution-code) For this problem, you’ll need some “distribution code”—that is, code written by CS50’s staff. Provided to you are three already-compiled C programs, `sort1`, `sort2`, and `sort3`, as well as several `.txt` files for input and another file, `answers.txt`, in which to write your answers. Each of `sort1`, `sort2`, and `sort3` implements a different sorting algorithm: selection sort, bubble sort, or merge sort (though not necessarily in that order!). Your task is to determine which sorting algorithm is used by each file. Start by downloading these files. <details> <summary>Download distribution files</summary> Open [VS Code](https://cs50.dev/). Start by clicking inside your terminal window, then execute `cd` by itself. You should find that its “prompt” resembles the below. ``` $ ``` Click inside of that terminal window and then execute ``` wget https://cdn.cs50.net/2023/fall/psets/3/sort.zip ``` followed by Enter in order to download a ZIP called `sort.zip` in your codespace. Take care not to overlook the space between `wget` and the following URL, or any other character for that matter! Now execute ``` unzip sort.zip ``` to create a folder called `sort`. You no longer need the ZIP file, so you can execute ``` rm sort.zip ``` and respond with “y” followed by Enter at the prompt to remove the ZIP file you downloaded. </details> ## [ Hints](https://cs50.harvard.edu/x/2024/psets/3/sort/#hints) Click the below toggles to read some advice! <details> <summary>Explore the .txt files</summary> - Multiple `.txt` files are provided to you. These files contain `n` lines of values, either reversed, shuffled, or sorted. - For example, `reversed10000.txt` contains 10000 lines of numbers that are reversed from `10000`, while `random50000.txt` contains 50000 lines of numbers that are in random order. - The different types of `.txt` files may help you determine which sort is which. Consider how each algorithm performs with an already sorted list. How about a reversed list? Or shuffled list? It may help to work through a smaller list of each type and walk through each sorting process. </details> <details> <summary>Time each sort with different inputs</summary> - To run the sorts on the text files, in the terminal, run `./[program_name] [text_file.txt]`. Make sure you have made use of `cd` to move into the `sort` directory! - For example, to sort `reversed10000.txt` with `sort1`, run `./sort1 reversed10000.txt`. - You may find it helpful to time your sorts. To do so, run `time ./[sort_file] [text_file.txt]`. - For example, you could run `time ./sort1 reversed10000.txt` to run `sort1` on 10,000 reversed numbers. At the end of your terminal’s output, you can look at the `real` time to see how much time actually elapsed while running the program. </details> ## [ Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/sort/#walkthrough) <iframe src=\"https://youtube.com/embed/-Bhxxw6JKKY\"></iframe> <details> <summary>Not sure how to solve?</summary> <iframe src=\"https://youtube.com/embed/uOYhrBs37j0\"></iframe> </details> ## [ How to Test](https://cs50.harvard.edu/x/2024/psets/3/sort/#how-to-test) ### [",
+        "keyphrases": [
+          "sorting algorithms",
+          "selection sort",
+          "bubble sort",
+          "merge sort",
+          "distribution code",
+          "C programs",
+          "answers.txt",
+          "reversed10000.txt",
+          "random50000.txt",
+          "text files"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "5607d530-47e5-4e49-aac4-706160c841b7",
+      "properties": {
+        "page_content": "Correctness](https://cs50.harvard.edu/x/2024/psets/3/sort/#correctness) ``` check50 cs50/problems/2024/x/sort ``` ## [ How to Submit](https://cs50.harvard.edu/x/2024/psets/3/sort/#how-to-submit) ``` submit50 cs50/problems/2024/x/sort ```",
+        "keyphrases": [
+          "Correctness",
+          "submit50",
+          "check50"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "d55f5dc6-6d5a-451b-ad56-7ea37064c5d8",
+      "properties": {
+        "page_content": "# [Tideman](https://cs50.harvard.edu/x/2024/psets/3/tideman/#tideman) ## [Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/tideman/#problem-to-solve) You already know about plurality elections, which follow a very simple algorithm for determining the winner of an election: every voter gets one vote, and the candidate with the most votes wins. But the plurality vote does have some disadvantages. What happens, for instance, in an election with three candidates, and the ballots below are cast? ![Five ballots, tie betweeen Alice and Bob](https://cs50.harvard.edu/x/2024/psets/3/fptp_ballot_1.png) A plurality vote would here declare a tie between Alice and Bob, since each has two votes. But is that the right outcome? There’s another kind of voting system known as a ranked-choice voting system. In a ranked-choice system, voters can vote for more than one candidate. Instead of just voting for their top choice, they can rank the candidates in order of preference. The resulting ballots might therefore look like the below. ![Five ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/ranked_ballot_1.png) Here, each voter, in addition to specifying their first preference candidate, has also indicated their second and third choices. And now, what was previously a tied election could now have a winner. The race was originally tied between Alice and Bob. But the voter who chose Charlie preferred Alice over Bob, so Alice could here be declared the winner. Ranked choice voting can also solve yet another potential drawback of plurality voting. Take a look at the following ballots. ![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/condorcet_1.png) Who should win this election? In a plurality vote where each voter chooses their first preference only, Charlie wins this election with four votes compared to only three for Bob and two for Alice. (Note that, if you’re familiar with the instant runoff voting system, Charlie wins here under that system as well). Alice, however, might reasonably make the argument that she should be the winner of the election instead of Charlie: after all, of the nine voters, a majority (five of them) preferred Alice over Charlie, so most people would be happier with Alice as the winner instead of Charlie. Alice is, in this election, the so-called “Condorcet winner” of the election: the person who would have won any head-to-head matchup against another candidate. If the election had been just Alice and Bob, or just Alice and Charlie, Alice would have won. The Tideman voting method (also known as “ranked pairs”) is a ranked-choice voting method that’s guaranteed to produce the Condorcet winner of the election if one exists. In a file called `tideman.c` in a folder called `tideman`, create a program to simulate an election by the Tideman voting method. ## [Demo](https://cs50.harvard.edu/x/2024/psets/3/tideman/#demo) ``` $ make tideman $ ./tideman Alice Bob Charlie Number of voters: 3 Rank 1: Alice Rank 2: Bob Rank 3: Charlie Rank 1: Bob Rank 2: Charlie Rank 3: Alice Rank 1: Alice Rank 2: Bob Rank 3: Charlie Alice $ ./tideman Alice Bob Charlie Number of voters: 3 Rank 1: David Invalid vote. $ ./tideman Usage: tideman [candidate ...] $ ``` ## [Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/tideman/#distribution-code) <details> <summary>Download the distribution code</summary> Log into [cs50.dev](https://cs50.dev/), click on your terminal window, and execute `cd` by itself. You should find that your terminal window’s prompt resembles the below: ``` $ ``` Next execute ``` wget https://cdn.cs50.net/2023/fall/psets/3/tideman.zip ``` in order to download a ZIP called `tideman.zip` into your codespace. Then execute ``` unzip tideman.zip ``` to create a folder called `tideman`. You no longer need the ZIP file, so you can execute ``` rm tideman.zip ``` and respond with “y” followed by Enter at the prompt to remove the ZIP file you downloaded. Now type ``` cd tideman ``` followed by Enter to move yourself into (i.e., open) that directory. Your prompt should now resemble the below. ``` tideman/ $ ``` If all was successful, you should execute ``` ls ``` and see a file named `tideman.c`. Executing `code tideman.c` should open the file where you will type your code for this problem set. If not, retrace your steps and see if you can determine where you went wrong! </details>",
+        "keyphrases": [
+          "Tideman voting method",
+          "ranked-choice voting system",
+          "plurality vote",
+          "Condorcet winner",
+          "ranked pairs",
+          "Alice",
+          "Bob",
+          "Charlie",
+          "election",
+          "voters"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "6697bc4b-a07e-473b-95c5-9137614bf7ed",
+      "properties": {
+        "page_content": "## [Background](https://cs50.harvard.edu/x/2024/psets/3/tideman/#background) Generally speaking, the Tideman method works by constructing a “graph” of candidates, where an arrow (i.e. edge) from candidate A to candidate B indicates that candidate A wins against candidate B in a head-to-head matchup. The graph for the above election, then, would look like the below. ![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/condorcet_graph_1.png) The arrow from Alice to Bob means that more voters prefer Alice to Bob (5 prefer Alice, 4 prefer Bob). Likewise, the other arrows mean that more voters prefer Alice to Charlie, and more voters prefer Charlie to Bob. Looking at this graph, the Tideman method says the winner of the election should be the “source” of the graph (i.e. the candidate that has no arrow pointing at them). In this case, the source is Alice — Alice is the only one who has no arrow pointing at her, which means nobody is preferred head-to-head over Alice. Alice is thus declared the winner of the election. It’s possible, however, that when the arrows are drawn, there is no Condorcet winner. Consider the below ballots. ![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/no_condorcet_1.png) Between Alice and Bob, Alice is preferred over Bob by a 7-2 margin. Between Bob and Charlie, Bob is preferred over Charlie by a 5-4 margin. But between Charlie and Alice, Charlie is preferred over Alice by a 6-3 margin. If we draw out the graph, there is no source! We have a cycle of candidates, where Alice beats Bob who beats Charlie who beats Alice (much like a game of rock-paper-scissors). In this case, it looks like there’s no way to pick a winner. To handle this, the Tideman algorithm must be careful to avoid creating cycles in the candidate graph. How does it do this? The algorithm locks in the strongest edges first, since those are arguably the most significant. In particular, the Tideman algorithm specifies that matchup edges should be “locked in” to the graph one at a time, based on the “strength” of the victory (the more people who prefer a candidate over their opponent, the stronger the victory). So long as the edge can be locked into the graph without creating a cycle, the edge is added; otherwise, the edge is ignored. How would this work in the case of the votes above? Well, the biggest margin of victory for a pair is Alice beating Bob, since 7 voters prefer Alice over Bob (no other head-to-head matchup has a winner preferred by more than 7 voters). So the Alice-Bob arrow is locked into the graph first. The next biggest margin of victory is Charlie’s 6-3 victory over Alice, so that arrow is locked in next. Next up is Bob’s 5-4 victory over Charlie. But notice: if we were to add an arrow from Bob to Charlie now, we would create a cycle! Since the graph can’t allow cycles, we should skip this edge, and not add it to the graph at all. If there were more arrows to consider, we would look to those next, but that was the last arrow, so the graph is complete. This step-by-step process is shown below, with the final graph at right. ![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/lockin.png) Based on the resulting graph, Charlie is the source (there’s no arrow pointing towards Charlie), so Charlie is declared the winner of this election. Put more formally, the Tideman voting method consists of three parts: - **Tally**: Once all of the voters have indicated all of their preferences, determine, for each pair of candidates, who the preferred candidate is and by what margin they are preferred. - **Sort**: Sort the pairs of candidates in decreasing order of strength of victory, where strength of victory is defined to be the number of voters who prefer the preferred candidate. - **Lock**: Starting with the strongest pair, go through the pairs of candidates in order and “lock in” each pair to the candidate graph, so long as locking in that pair does not create a cycle in the graph. Once the graph is complete, the source of the graph (the one with no edges pointing towards it) is the winner!",
+        "keyphrases": [
+          "Tideman method",
+          "candidate graph",
+          "head-to-head matchup",
+          "Condorcet winner",
+          "Tideman algorithm",
+          "margin of victory",
+          "Alice",
+          "Bob",
+          "Charlie",
+          "election"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "ab5445d5-9591-4a4c-8cca-eaa3f272d54a",
+      "properties": {
+        "page_content": "## [Understanding](https://cs50.harvard.edu/x/2024/psets/3/tideman/#understanding) Let’s take a look at `tideman.c`. First, notice the two-dimensional array `preferences`. The integer `preferences[i][j]` will represent the number of voters who prefer candidate `i` over candidate `j`. The file also defines another two-dimensional array, called `locked`, which will represent the candidate graph. `locked` is a boolean array, so `locked[i][j]` being `true` represents the existence of an edge pointing from candidate `i` to candidate `j`; `false` means there is no edge. (If curious, this representation of a graph is known as an “adjacency matrix”). Next up is a `struct` called `pair`, used to represent a pair of candidates: each pair includes the `winner`’s candidate index and the `loser`’s candidate index. The candidates themselves are stored in the array `candidates`, which is an array of `string`s representing the names of each of the candidates. There’s also an array of `pairs`, which will represent all of the pairs of candidates (for which one is preferred over the other) in the election. The program also has two global variables: `pair_count` and `candidate_count`, representing the number of pairs and number of candidates in the arrays `pairs` and `candidates`, respectively. Now onto `main`. Notice that after determining the number of candidates, the program loops through the `locked` graph and initially sets all of the values to `false`, which means our initial graph will have no edges in it. Next, the program loops over all of the voters and collects their preferences in an array called `ranks` (via a call to `vote`), where `ranks[i]` is the index of the candidate who is the `i`th preference for the voter. These ranks are passed into the `record_preference` function, whose job it is to take those ranks and update the global `preferences` variable. Once all of the votes are in, the pairs of candidates are added to the `pairs` array via a called to `add_pairs`, sorted via a call to `sort_pairs`, and locked into the graph via a call to `lock_pairs`. Finally, `print_winner` is called to print out the name of the election’s winner! Further down in the file, you’ll see that the functions `vote`, `record_preference`, `add_pairs`,`sort_pairs`, `lock_pairs`, and `print_winner` are left blank. That’s up to you! ## [Specification](https://cs50.harvard.edu/x/2024/psets/3/tideman/#specification) Complete the implementation of `tideman.c` in such a way that it simulates a Tideman election. - Complete the `vote` function. - The function takes arguments `rank`, `name`, and `ranks`. If `name` is a match for the name of a valid candidate, then you should update the `ranks` array to indicate that the voter has the candidate as their `rank` preference (where `0` is the first preference, `1` is the second preference, etc.) - Recall that `ranks[i]` here represents the user’s `i`th preference. - The function should return `true` if the rank was successfully recorded, and `false` otherwise (if, for instance, `name` is not the name of one of the candidates). - You may assume that no two candidates will have the same name. - Complete the `record_preferences` function. - The function is called once for each voter, and takes as argument the `ranks` array, (recall that `ranks[i]` is the voter’s `i`th preference, where `ranks[0]` is the first preference). - The function should update the global `preferences` array to add the current voter’s preferences. Recall that `preferences[i][j]` should represent the number of voters who prefer candidate `i` over candidate `j`. - You may assume that every voter will rank each of the candidates. - Complete the `add_pairs` function. - The function should add all pairs of candidates where one candidate is preferred to the `pairs` array. A pair of candidates who are tied (one is not preferred over the other) should not be added to the array. - The function should update the global variable `pair_count` to be the number of pairs of candidates. (The pairs should thus all be stored between `pairs[0]` and `pairs[pair_count - 1]`, inclusive). - Complete the `sort_pairs` function. - The function should sort the `pairs` array in decreasing order of strength of victory, where strength of victory is defined to be the number of voters who prefer the preferred candidate. If multiple pairs have the same strength of victory, you may assume that the order does not matter. - Complete the `lock_pairs` function. - The function should create the `locked` graph, adding all edges in decreasing order of victory strength so long as the edge would not create a cycle. - Complete the `print_winner` function. - The function should print out the name of the candidate who is the source of the graph. You may assume there will not be more than one source. You should not modify anything else in `tideman.c` other than the implementations of the `vote`, `record_preferences`, `add_pairs`, `sort_pairs`, `lock_pairs`, and `print_winner` functions (and the inclusion of additional header files, if you’d like). You are permitted to add additional functions to `tideman.c`, so long as you do not change the declarations of any of the existing functions.",
+        "keyphrases": [
+          "tideman.c",
+          "two-dimensional array",
+          "candidate graph",
+          "adjacency matrix",
+          "pair of candidates",
+          "global variables",
+          "record_preference function",
+          "add_pairs",
+          "sort_pairs",
+          "lock_pairs"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "36841d39-0c9b-4a07-ba14-1de4a9700838",
+      "properties": {
+        "page_content": "## [Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/tideman/#walkthrough) <iframe src=\"https://www.youtube.com/embed/kb83NwyYI68?modestbranding=0&rel=0&showinfo=0\"></iframe> ## [How to Test](https://cs50.harvard.edu/x/2024/psets/3/tideman/#how-to-test) Be sure to test your code to make sure it handles… - An election with any number of candidate (up to the `MAX` of `9`) - Voting for a candidate by name - Invalid votes for candidates who are not on the ballot - Printing the winner of the election ### [Correctness](https://cs50.harvard.edu/x/2024/psets/3/tideman/#correctness) ``` check50 cs50/problems/2024/x/tideman ``` ### [Style](https://cs50.harvard.edu/x/2024/psets/3/tideman/#style) ``` style50 tideman.c ``` ## [How to Submit](https://cs50.harvard.edu/x/2024/psets/3/tideman/#how-to-submit) ``` submit50 cs50/problems/2024/x/tideman ```",
+        "keyphrases": [
+          "How to Test",
+          "Printing the winner",
+          "Invalid votes",
+          "Voting for a candidate",
+          "An election",
+          "How to Submit",
+          "Correctness",
+          "Walkthrough",
+          "Style",
+          "tideman.c"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "f54ec373-f63b-469e-acac-a50fc684e1bb",
+      "properties": {
+        "page_content": "# [Runoff](https://cs50.harvard.edu/x/2024/psets/3/runoff/#runoff) ## [ Problem to Solve](https://cs50.harvard.edu/x/2024/psets/3/runoff/#problem-to-solve) You already know about plurality elections, which follow a very simple algorithm for determining the winner of an election: every voter gets one vote, and the candidate with the most votes wins. But the plurality vote does have some disadvantages. What happens, for instance, in an election with three candidates, and the ballots below are cast? ![Five ballots, tie betweeen Alice and Bob](https://cs50.harvard.edu/x/2024/psets/3/fptp_ballot_1.png) A plurality vote would here declare a tie between Alice and Bob, since each has two votes. But is that the right outcome? There’s another kind of voting system known as a ranked-choice voting system. In a ranked-choice system, voters can vote for more than one candidate. Instead of just voting for their top choice, they can rank the candidates in order of preference. The resulting ballots might therefore look like the below. ![Five ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/ranked_ballot_1.png) Here, each voter, in addition to specifying their first preference candidate, has also indicated their second and third choices. And now, what was previously a tied election could now have a winner. The race was originally tied between Alice and Bob, so Charlie was out of the running. But the voter who chose Charlie preferred Alice over Bob, so Alice could here be declared the winner. Ranked choice voting can also solve yet another potential drawback of plurality voting. Take a look at the following ballots. ![Nine ballots, with ranked preferences](https://cs50.harvard.edu/x/2024/psets/3/ranked_ballot_3.png) Who should win this election? In a plurality vote where each voter chooses their first preference only, Charlie wins this election with four votes compared to only three for Bob and two for Alice. But a majority of the voters (5 out of the 9) would be happier with either Alice or Bob instead of Charlie. By considering ranked preferences, a voting system may be able to choose a winner that better reflects the preferences of the voters. One such ranked choice voting system is the instant runoff system. In an instant runoff election, voters can rank as many candidates as they wish. If any candidate has a majority (more than 50%) of the first preference votes, that candidate is declared the winner of the election. If no candidate has more than 50% of the vote, then an “instant runoff” occurrs. The candidate who received the fewest number of votes is eliminated from the election, and anyone who originally chose that candidate as their first preference now has their second preference considered. Why do it this way? Effectively, this simulates what would have happened if the least popular candidate had not been in the election to begin with. The process repeats: if no candidate has a majority of the votes, the last place candidate is eliminated, and anyone who voted for them will instead vote for their next preference (who hasn’t themselves already been eliminated). Once a candidate has a majority, that candidate is declared the winner. Sounds a bit more complicated than a plurality vote, doesn’t it? But it arguably has the benefit of being an election system where the winner of the election more accurately represents the preferences of the voters. In a file called `runoff.c` in a folder called `runoff`, create a program to simulate a runoff election. ## [ Demo](https://cs50.harvard.edu/x/2024/psets/3/runoff/#demo) ``` Rank 1: Alice Rank 2: Bob Rank 3: Charlie Alice $ ./runoff Alice Bob Charlie Number of voters: 3 Rank 1: David Invalid vote. $ ./runoff Usage: runoff [candidate ...] $ ``` ## [",
+        "keyphrases": [
+          "runoff election",
+          "ranked-choice voting system",
+          "plurality vote",
+          "instant runoff system",
+          "first preference votes",
+          "voters",
+          "candidate",
+          "election",
+          "Alice",
+          "Bob"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "c2222f79-c2f8-4a6a-b9cd-d45fa62d7d7d",
+      "properties": {
+        "page_content": "Distribution Code](https://cs50.harvard.edu/x/2024/psets/3/runoff/#distribution-code) <details> <summary>Download the distribution code</summary> Log into [cs50.dev](https://cs50.dev/), click on your terminal window, and execute `cd` by itself. You should find that your terminal window’s prompt resembles the below: ``` $ ``` Next execute ``` wget https://cdn.cs50.net/2023/fall/psets/3/runoff.zip ``` in order to download a ZIP called `runoff.zip` into your codespace. Then execute ``` unzip runoff.zip ``` to create a folder called `runoff`. You no longer need the ZIP file, so you can execute ``` rm runoff.zip ``` and respond with “y” followed by Enter at the prompt to remove the ZIP file you downloaded. Now type ``` cd runoff ``` followed by Enter to move yourself into (i.e., open) that directory. Your prompt should now resemble the below. ``` runoff/ $ ``` If all was successful, you should execute ``` ls ``` and see a file named `runoff.c`. Executing `code runoff.c` should open the file where you will type your code for this problem set. If not, retrace your steps and see if you can determine where you went wrong! </details> <details> <summary>Understand the code in runoff.c</summary> Whenever you’ll extend the functionality of existing code, it’s best to be sure you first understand it in its present state. Look at the top of `runoff.c` first. Two constants are defined: `MAX_CANDIDATES` for the maximum number of candidates in the election, and `MAX_VOTERS` for the maximum number of voters in the election. ```c // Max voters and candidates #define MAX_VOTERS 100 #define MAX_CANDIDATES 9 ``` Notice that `MAX_CANDIDATES` is used to size an array, `candidates`. ```c // Array of candidates candidate candidates[MAX_CANDIDATES]; ``` `candidates` is an array of `candidate`s. In `runoff.c` a `candidate` is a `struct`. Every `candidate` has a `string` field for their `name`, an `int` representing the number of `votes` they currently have, and a `bool` value called `eliminated` that indicates whether the candidate has been eliminated from the election. The array `candidates` will keep track of all of the candidates in the election. ```c // Candidates have name, vote count, eliminated status typedef struct { string name; int votes; bool eliminated; } candidate; ``` Now you can better understand `preferences`, the two-dimensional array. The array `preferences[i]` will represent all of the preferences for voter number `i`. The integer, `preferences[i][j]`, will store the index of the candidate, from the `candidates` array, who is the `j`th preference for voter `i`. ```c // preferences[i][j] is jth preference for voter i int preferences[MAX_VOTERS][MAX_CANDIDATES]; ``` The program also has two global variables: `voter_count` and `candidate_count`. ```c // Numbers of voters and candidates int voter_count; int candidate_count; ``` Now onto `main`. Notice that after determining the number of candidates and the number of voters, the main voting loop begins, giving every voter a chance to vote. As the voter enters their preferences, the `vote` function is called to keep track of all of the preferences. If at any point, the ballot is deemed to be invalid, the program exits. Once all of the votes are in, another loop begins: this one’s going to keep looping through the runoff process of checking for a winner and eliminating the last place candidate until there is a winner. The first call here is to a function called `tabulate`, which should look at all of the voters’ preferences and compute the current vote totals, by looking at each voter’s top choice candidate who hasn’t yet been eliminated. Next, the `print_winner` function should print out the winner if there is one; if there is, the program is over. But otherwise, the program needs to determine the fewest number of votes anyone still in the election received (via a call to `find_min`). If it turns out that everyone in the election is tied with the same number of votes (as determined by the `is_tie` function), the election is declared a tie; otherwise, the last-place candidate (or candidates) is eliminated from the election via a call to the `eliminate` function. If you look a bit further down in the file, you’ll see that the rest of the functions—`vote`, `tabulate`, `print_winner`, `find_min`, `is_tie`, and `eliminate`—are all left to up to you to complete! **You should only modify these functions in runoff.c, though you may `#include` additional header files atop runoff.c if you’d like** </details> ## [",
+        "keyphrases": [
+          "distribution code",
+          "runoff.c",
+          "MAX_CANDIDATES",
+          "MAX_VOTERS",
+          "candidate",
+          "preferences",
+          "voter_count",
+          "candidate_count",
+          "vote function",
+          "print_winner"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "b222d7d8-5da3-4de2-acc4-1b1ef33e899f",
+      "properties": {
+        "page_content": "Hints](https://cs50.harvard.edu/x/2024/psets/3/runoff/#hints) Click the below toggles to read some advice! <details> <summary>Complete the vote function</summary> Complete the `vote` function. - The function takes three arguments: `voter`, `rank`, and `name`. - If `name` is a match for the name of a valid candidate, then you should update the global preferences array to indicate that the voter `voter` has that candidate as their `rank` preference. Keep in mind `0` is the first preference, `1` is the second preference, etc. You may assume that no two candidates will have the same name. - If the preference is successfully recorded, the function should return `true`. The function should return `false` otherwise. Consider, for instance, when `name` is not the name of one of the candidates. As you write your code, consider these hints: - Recall that `candidate_count` stores the number of candidates in the election. - Recall that you can use [`strcmp`](https://man.cs50.io/3/strcmp) to compare two strings. - Recall that `preferences[i][j]` stores the index of the candidate who is the `j`th ranked preference for the `i`th voter. </details> <details> <summary>Complete the tabulate function</summary> Complete the `tabulate` function. - The function should update the number of `votes` each candidate has at this stage in the runoff. - Recall that at each stage in the runoff, every voter effectively votes for their top-preferred candidate who has not already been eliminated. As you write your code, consider these hints: - Recall that `voter_count` stores the number of voters in the election and that, for each voter in our election, we want to count one ballot. - Recall that for a voter `i`, their top choice candidate is represented by `preferences[i][0]`, their second choice candidate by `preferences[i][1]`, etc. - Recall that the `candidate` `struct` has a field called `eliminated`, which will be `true` if the candidate has been eliminated from the election. - Recall that the `candidate` `struct` has a field called `votes`, which you’ll likely want to update for each voter’s preferred candidate. - Recall that once you’ve cast a vote for a voter’s first non-eliminated candidate, you’ll want to stop there, not continue down their ballot. You can break out of a loop early using `break` inside of a conditional. </details> <details> <summary>Complete the print_winner function</summary> Complete the `print_winner` function. - If any candidate has more than half of the vote, their name should be printed and the function should return `true`. - If nobody has won the election yet, the function should return `false`. As you write your code, consider this hint: - Recall that `voter_count` stores the number of voters in the election. Given that, how would you express the number of votes needed to win the election? </details> <details> <summary>Complete the find_min function</summary> Complete the `find_min` function. - The function should return the minimum vote total for any candidate who is still in the election. As you write your code, consider this hint: - You’ll likely want to loop through the candidates to find the one who is both still in the election and has the fewest number of votes. What information should you keep track of as you loop through the candidates? </details> <details> <summary>Complete the is_tie function</summary> Complete the `is_tie` function. - The function takes an argument `min`, which will be the minimum number of votes that anyone in the election currently has. - The function should return `true` if every candidate remaining in the election has the same number of votes, and should return `false` otherwise. As you write your code, consider this hint: - Recall that a tie happens if every candidate still in the election has the same number of votes. Note, too, that the `is_tie` function takes an argument `min`, which is the smallest number of votes any candidate currently has. How might you use `min` to determine if the election is a tie (or, conversely, not a tie)? </details> <details> <summary>Complete the eliminate function</summary> Complete the `eliminate` function. - The function takes an argument `min`, which will be the minimum number of votes that anyone in the election currently has. - The function should eliminate the candidate (or candidates) who have `min` number of votes. </details> ## [",
+        "keyphrases": [
+          "vote function",
+          "preferences array",
+          "candidate",
+          "tabulate function",
+          "print_winner function",
+          "find_min function",
+          "is_tie function",
+          "eliminate function",
+          "voter_count",
+          "candidate_count"
+        ]
+      },
+      "type": "chunk"
+    },
+    {
+      "id": "52daa127-dc05-4286-90f3-8f3e1710077c",
+      "properties": {
+        "page_content": "Walkthrough](https://cs50.harvard.edu/x/2024/psets/3/runoff/#walkthrough) <iframe src=\"https://www.youtube.com/embed/-Vc5aGywKxo?modestbranding=0&rel=0&showinfo=0\"></iframe> ## [ How to Test](https://cs50.harvard.edu/x/2024/psets/3/runoff/#how-to-test) Be sure to test your code to make sure it handles… - An election with any number of candidate (up to the `MAX` of `9`) - Voting for a candidate by name - Invalid votes for candidates who are not on the ballot - Printing the winner of the election if there is only one - Not eliminating anyone in the case of a tie between all remaining candidates ### [ Correctness](https://cs50.harvard.edu/x/2024/psets/3/runoff/#correctness) ``` check50 cs50/problems/2024/x/runoff ``` ### [ Style](https://cs50.harvard.edu/x/2024/psets/3/runoff/#style) ``` style50 runoff.c ``` ## [ How to Submit](https://cs50.harvard.edu/x/2024/psets/3/runoff/#how-to-submit) ``` submit50 cs50/problems/2024/x/runoff ```",
+        "keyphrases": [
+          "election",
+          "candidate",
+          "invalid votes",
+          "printing the winner",
+          "tie between all remaining candidates",
+          "How to Test",
+          "Correctness",
+          "Style",
+          "How to Submit",
+          "Voting for a candidate"
+        ]
+      },
+      "type": "chunk"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "e98ac160-11aa-4964-a925-015477a055b8",
+      "type": "child",
+      "source": "5faef7ea-ea15-4045-a5d3-cd1850f01c94",
+      "target": "6e1f0090-56b2-4e93-881a-39f4d03b68c3",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "f276f7f2-40cf-4fbc-a98c-557ddc9f005e",
+      "type": "child",
+      "source": "5faef7ea-ea15-4045-a5d3-cd1850f01c94",
+      "target": "bdab49cb-b194-46cf-ac52-4aca1baca3d0",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "f7c7d41d-1ffd-426d-b221-b356eebc8254",
+      "type": "child",
+      "source": "5faef7ea-ea15-4045-a5d3-cd1850f01c94",
+      "target": "97c878d7-1a92-426d-a130-e39768368545",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "2cd2d82f-8cbf-452e-a2e7-993ace019167",
+      "type": "next",
+      "source": "6e1f0090-56b2-4e93-881a-39f4d03b68c3",
+      "target": "bdab49cb-b194-46cf-ac52-4aca1baca3d0",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "409f9a19-f3f2-4bc6-8b36-dcbc1ae6b7c3",
+      "type": "next",
+      "source": "bdab49cb-b194-46cf-ac52-4aca1baca3d0",
+      "target": "97c878d7-1a92-426d-a130-e39768368545",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "40006207-8425-440c-8082-cd153ff80e87",
+      "type": "child",
+      "source": "4451ed6f-c582-4416-a8d7-6d982d5f0d9d",
+      "target": "ed3ce6b7-d0b1-4c41-924c-6528efcfdf34",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "6ef3c519-a598-48b2-9e81-82986d5fa470",
+      "type": "child",
+      "source": "4451ed6f-c582-4416-a8d7-6d982d5f0d9d",
+      "target": "39ecf2e1-564f-474f-aaf8-81326a5e9da3",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "65bc97a0-e85f-4eec-a43b-323a591aba6c",
+      "type": "child",
+      "source": "4451ed6f-c582-4416-a8d7-6d982d5f0d9d",
+      "target": "9240359e-7116-4c72-8fe6-ca30a312ced5",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "df4a7c3d-ab75-4e57-9978-03e972628389",
+      "type": "next",
+      "source": "ed3ce6b7-d0b1-4c41-924c-6528efcfdf34",
+      "target": "39ecf2e1-564f-474f-aaf8-81326a5e9da3",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "d47a99e3-521d-4554-93a6-167e6513ddef",
+      "type": "next",
+      "source": "39ecf2e1-564f-474f-aaf8-81326a5e9da3",
+      "target": "9240359e-7116-4c72-8fe6-ca30a312ced5",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "683716c5-dc2e-4cb2-8d85-e859dc42ce54",
+      "type": "child",
+      "source": "c2bf58f1-1b06-4173-b5a6-d35497b18345",
+      "target": "9652acb3-ad81-43fd-a8c0-273e5ddecfe5",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "13421aa2-154e-4a57-b906-4cfea2f85c20",
+      "type": "child",
+      "source": "c2bf58f1-1b06-4173-b5a6-d35497b18345",
+      "target": "5607d530-47e5-4e49-aac4-706160c841b7",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "ab45a320-2de9-4d46-bd95-f1ccfba43e10",
+      "type": "next",
+      "source": "9652acb3-ad81-43fd-a8c0-273e5ddecfe5",
+      "target": "5607d530-47e5-4e49-aac4-706160c841b7",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "1229ba99-c9e4-468c-a6b8-fd4e778626f9",
+      "type": "child",
+      "source": "02e15364-0c00-406a-b1ac-216ea80f7269",
+      "target": "d55f5dc6-6d5a-451b-ad56-7ea37064c5d8",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "e7032df3-958c-46a5-94f1-e52fa485e935",
+      "type": "child",
+      "source": "02e15364-0c00-406a-b1ac-216ea80f7269",
+      "target": "6697bc4b-a07e-473b-95c5-9137614bf7ed",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "80aeafac-2cdc-4b5f-a939-cf64a1478233",
+      "type": "child",
+      "source": "02e15364-0c00-406a-b1ac-216ea80f7269",
+      "target": "ab5445d5-9591-4a4c-8cca-eaa3f272d54a",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "a976439e-7fc8-45d8-ad21-a36b79ee2e64",
+      "type": "child",
+      "source": "02e15364-0c00-406a-b1ac-216ea80f7269",
+      "target": "36841d39-0c9b-4a07-ba14-1de4a9700838",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "6257d0aa-2aec-4073-97c8-b47e0876006c",
+      "type": "next",
+      "source": "d55f5dc6-6d5a-451b-ad56-7ea37064c5d8",
+      "target": "6697bc4b-a07e-473b-95c5-9137614bf7ed",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "4df5a4a5-e21a-4fc0-918b-a1e2f986cb76",
+      "type": "next",
+      "source": "6697bc4b-a07e-473b-95c5-9137614bf7ed",
+      "target": "ab5445d5-9591-4a4c-8cca-eaa3f272d54a",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "b1071801-bfa3-4439-af08-212f79a2c70c",
+      "type": "next",
+      "source": "ab5445d5-9591-4a4c-8cca-eaa3f272d54a",
+      "target": "36841d39-0c9b-4a07-ba14-1de4a9700838",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "437f2f0c-6e1c-481d-8aa7-c93ba2ecaa69",
+      "type": "child",
+      "source": "6e3e78a6-9abb-4fd4-937d-baf0c44b0b16",
+      "target": "f54ec373-f63b-469e-acac-a50fc684e1bb",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "6db0831c-2696-491f-8f58-5a959f49cd11",
+      "type": "child",
+      "source": "6e3e78a6-9abb-4fd4-937d-baf0c44b0b16",
+      "target": "c2222f79-c2f8-4a6a-b9cd-d45fa62d7d7d",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "60c95988-3ff9-4364-96cf-0a57f2015ded",
+      "type": "child",
+      "source": "6e3e78a6-9abb-4fd4-937d-baf0c44b0b16",
+      "target": "b222d7d8-5da3-4de2-acc4-1b1ef33e899f",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "d441eed7-6799-4773-aa0a-96c2340e3d1c",
+      "type": "child",
+      "source": "6e3e78a6-9abb-4fd4-937d-baf0c44b0b16",
+      "target": "52daa127-dc05-4286-90f3-8f3e1710077c",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "d657acdc-371e-4fe8-b073-94a4774fb431",
+      "type": "next",
+      "source": "f54ec373-f63b-469e-acac-a50fc684e1bb",
+      "target": "c2222f79-c2f8-4a6a-b9cd-d45fa62d7d7d",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "2300aadc-f9f7-4e5f-bbba-c14cbb9ae97a",
+      "type": "next",
+      "source": "c2222f79-c2f8-4a6a-b9cd-d45fa62d7d7d",
+      "target": "b222d7d8-5da3-4de2-acc4-1b1ef33e899f",
+      "bidirectional": false,
+      "properties": {}
+    },
+    {
+      "id": "8d019d02-542f-45ef-8c05-e65f39946a0a",
+      "type": "next",
+      "source": "b222d7d8-5da3-4de2-acc4-1b1ef33e899f",
+      "target": "52daa127-dc05-4286-90f3-8f3e1710077c",
+      "bidirectional": false,
+      "properties": {}
+    }
+  ]
+}
