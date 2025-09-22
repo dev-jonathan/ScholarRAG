@@ -159,10 +159,10 @@ temp/
 tmp/
 
 # Data files (large files)
-*.csv
-*.json
-*.parquet
-!requirements.txt
+# *.csv
+# *.json
+# *.parquet
+# !requirements.txt
 
 # API keys
 .env

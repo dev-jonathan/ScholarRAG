@@ -1,0 +1,14 @@
+langchain
+ragas
+langchain-google-genai
+langchain_community
+transformers
+torch
+pandas
+sentence-transformers
+langchain-huggingface
+einops
+python-dotenv
+rapidfuzz
+markdown
+seaborn
